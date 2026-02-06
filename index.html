@@ -3,37 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aleppo Center - دفعات</title>
+<title>Aleppo Center - دفتر الدفعات</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+
 <div class="container">
-    <h1>Aleppo Center - دفعات</h1>
+    <h1>Aleppo Center - دفتر الدفعات</h1>
 
     <div class="section">
         <input type="text" id="accountName" placeholder="اسم الحساب">
-        <button id="addAccountBtn">إضافة حساب</button>
+        <button onclick="addAccount()">إضافة حساب</button>
     </div>
 
-    <div class="section">
-        <select id="accountSelect"></select>
-        <input type="number" id="paymentAmount" placeholder="المبلغ">
-        <select id="currency">
-            <option value="SYP">SYP</option>
-            <option value="USD">USD</option>
-        </select>
-        <button id="addPaymentBtn">إضافة دفعة</button>
-    </div>
-
-    <h2>الحسابات القائمة</h2>
     <div id="accountsContainer"></div>
 
-    <div id="totalAllContainer">
-        <strong id="totalAll"></strong>
-    </div>
-
     <div class="footer">
-        <span>شكراً لمحمد شاشو على التطوير</span>
+        شكراً لمحمد شاشو على تطوير
     </div>
 </div>
 
