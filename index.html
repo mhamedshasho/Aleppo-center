@@ -3,23 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aleppo Center - دفعات الحسابات</title>
+<title>Aleppo Center</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="container">
-    <h1>Aleppo Center</h1>
+    <h2>Aleppo Center</h2>
+
     <div class="add-account">
-        <input type="text" id="accountName" placeholder="اسم الحساب">
-        <input type="number" id="accountDebt" placeholder="المبلغ الكلي للحساب">
+        <input id="accountName" placeholder="اسم الحساب">
+        <input id="accountDebt" type="number" placeholder="المبلغ المطلوب">
         <select id="accountCurrency">
-            <option value="SYP">ليرة سورية</option>
             <option value="USD">دولار</option>
+            <option value="SYP">سوري</option>
         </select>
-        <button onclick="addAccount()">اضافة حساب</button>
+        <button onclick="addAccount()">إضافة حساب</button>
     </div>
 
-    <h2>قائمة الحسابات</h2>
     <div id="accountsList"></div>
 
     <footer>شكراً لمحمد شاشو على تطوير</footer>
