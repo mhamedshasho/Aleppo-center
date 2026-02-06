@@ -1,174 +1,98 @@
-*{
-    box-sizing: border-box;
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f5f6fa;
+    color: #333;
     margin: 0;
-    padding: 0;
-}
-
-body{
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    padding: 20px;
     direction: rtl;
-    background: linear-gradient(135deg, #f2f5f9, #e9eef3);
-    color: #222;
-    min-height: 100vh;
 }
 
-/* الحاوية الرئيسية */
-.container{
-    max-width: 820px;
-    margin: 25px auto;
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 20px 18px 24px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
-}
-
-/* العنوان */
-h2{
+h2 {
     text-align: center;
-    margin-bottom: 18px;
-    color: #2c3e50;
-    font-weight: 700;
+    color: #2f80ed;
+    margin-bottom: 15px;
 }
 
-/* إضافة حساب */
-.add-account{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 10px;
-    margin-bottom: 18px;
-}
-
-.add-account input,
-.add-account select{
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #d0d6dc;
+input, select, button {
+    padding: 8px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
     font-size: 14px;
-    background: #fafafa;
 }
 
-.add-account input:focus,
-.add-account select:focus{
+input:focus, select:focus {
     outline: none;
-    border-color: #4a90e2;
-    background: #fff;
+    border-color: #2f80ed;
 }
 
-/* الأزرار */
-button{
-    background: linear-gradient(135deg, #4a90e2, #357abd);
+button {
+    background-color: #2f80ed;
     color: #fff;
     border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background-color: #1c5bbf;
+}
+
+.hidden { display: none; }
+
+#accountsList .account, #paymentsList .payment {
+    background: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
     border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all .2s ease;
-}
-
-button:hover{
-    opacity: .9;
-    transform: translateY(-1px);
-}
-
-button:active{
-    transform: translateY(0);
-}
-
-/* زر الرجوع */
-button[onclick*="back"]{
-    background: #7f8c8d;
-    margin-bottom: 10px;
-}
-
-/* عنصر الحساب في القائمة */
-.account{
-    background: linear-gradient(135deg, #f7f9fc, #eef3f8);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-    cursor: pointer;
-    transition: all .2s ease;
-}
-
-.account:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-
-/* رأس الحساب */
-.account-header{
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    font-weight: 600;
 }
 
-/* تفاصيل الحساب */
-.account-details div{
-    margin: 6px 0;
-    font-size: 14px;
-}
-
-/* الفواصل */
-hr{
-    border: none;
-    border-top: 1px solid #e1e6eb;
-    margin: 14px 0;
-}
-
-/* الدفعات */
-.payment{
-    background: #f9fbfd;
-    border: 1px solid #e3e8ee;
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-}
-
-/* أزرار الحذف */
-.payment button,
-.account-header button{
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    padding: 4px 10px;
+#accountsList .account button, #paymentsList .payment button {
+    background-color: #eb5757;
+    padding: 4px 8px;
     font-size: 12px;
 }
 
-/* أزرار أسفل الحساب */
-.account-actions{
-    margin-top: 12px;
+#accountsList .account button:hover, #paymentsList .payment button:hover {
+    background-color: #c0392b;
+}
+
+#accountPage .summary {
     display: flex;
-    gap: 8px;
+    justify-content: space-around;
+    background: #e0eaff;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+#accountPage .add-payment {
+    display: flex;
     flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
 }
 
-/* الفوتر */
-footer{
-    text-align: center;
-    margin-top: 18px;
-    font-size: 13px;
-    color: #7f8c8d;
+#accountPage .add-payment input, 
+#accountPage .add-payment select, 
+#accountPage .add-payment button {
+    flex: 1;
 }
 
-/* استجابة للهاتف */
-@media (max-width: 640px){
-    .add-account{
-        grid-template-columns: 1fr;
-    }
+#accountPage button {
+    margin-top: 10px;
+}
 
-    button{
-        width: 100%;
-    }
+#accountsPage input, #accountsPage select, #accountsPage button {
+    display: block;
+    width: 100%;
+}
 
-    .payment{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
+#filterCurrency {
+    width: 150px;
+    margin-bottom: 10px;
 }
