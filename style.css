@@ -1,56 +1,76 @@
+/* --- عام --- */
 body {
-    font-family: Arial, sans-serif;
-    background: #f0f4f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
     margin: 0;
     padding: 0;
     direction: rtl;
 }
 
 .container {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 20px;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 25px 30px;
     background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
+/* --- العناوين --- */
 h1, h2 {
     text-align: center;
-    color: #34495e;
+    color: #2c3e50;
+    margin-bottom: 20px;
 }
 
+/* --- الأقسام --- */
 .section {
     display: flex;
     justify-content: center;
-    margin: 15px 0;
-    gap: 10px;
     flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
 input, select, button {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #bdc3c7;
     font-size: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52,152,219,0.4);
 }
 
 button {
-    background: #1abc9c;
+    background: #3498db;
     color: white;
     border: none;
     cursor: pointer;
+    font-weight: bold;
 }
 
 button:hover {
-    background: #16a085;
+    background: #2980b9;
 }
 
+/* --- بطاقات الحسابات --- */
 .account-card {
-    background: #ecf0f1;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px 0;
+    background: #f8f9fa;
+    border-left: 5px solid #3498db;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .account-card h3 {
@@ -58,6 +78,7 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin: 0 0 10px 0;
+    color: #2c3e50;
 }
 
 .account-card ul {
@@ -69,31 +90,46 @@ button:hover {
 .account-card li {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: background 0.2s ease;
+}
+
+.account-card li:hover {
+    background: #e1f5fe;
 }
 
 .account-card li button {
     background: #e74c3c;
     padding: 5px 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     color: white;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .account-card li button:hover {
     background: #c0392b;
 }
 
+/* --- مجموع الحسابات --- */
 #totalAllContainer {
     text-align: center;
-    margin-top: 20px;
-    font-size: 18px;
+    margin-top: 25px;
+    font-size: 20px;
+    font-weight: bold;
     color: #27ae60;
 }
 
+/* --- التذييل --- */
 .footer {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 35px;
     font-size: 14px;
     color: #7f8c8d;
 }
