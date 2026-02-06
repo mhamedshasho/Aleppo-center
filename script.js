@@ -4,13 +4,14 @@ let currentAccount = null;
 function saveAccounts(){
     localStorage.setItem('accounts', JSON.stringify(accounts));
     renderAccounts();
+    if(currentAccount!==null) renderSingleAccount();
 }
 
 function addAccount(){
     let name = document.getElementById('accountName').value.trim();
     let debtInput = document.getElementById('accountDebt').value;
     let debt = parseFloat(debtInput);
-    if(isNaN(debt)) debt = 0;
+    if(isNaN(debt)) debt=0;
     let currency = document.getElementById('accountCurrency').value;
 
     if(!name) return alert('ادخل اسم الحساب');
@@ -22,16 +23,9 @@ function addAccount(){
     document.getElementById('accountDebt').value='';
 }
 
-function deleteAccount(index){
-    if(confirm('هل تريد حذف الحساب؟')){
-        accounts.splice(index,1);
-        saveAccounts();
-    }
-}
-
 function renderAccounts(){
     let container = document.getElementById('accountsList');
-    container.innerHTML = '';
+    container.innerHTML='';
     accounts.forEach((acc,index)=>{
         let div = document.createElement('div');
         div.className='account';
@@ -41,14 +35,14 @@ function renderAccounts(){
 }
 
 function openAccount(index){
-    currentAccount = index;
+    currentAccount=index;
     document.getElementById('accountsPage').style.display='none';
     document.getElementById('singleAccountPage').style.display='block';
     renderSingleAccount();
 }
 
 function backToAccounts(){
-    currentAccount = null;
+    currentAccount=null;
     document.getElementById('singleAccountPage').style.display='none';
     document.getElementById('accountsPage').style.display='block';
 }
@@ -67,8 +61,8 @@ function renderSingleAccount(){
     document.getElementById('debtSYP').innerText=debtSYP;
     document.getElementById('debtUSD').innerText=debtUSD;
 
-    document.getElementById('remainingSYP').innerText=(debtSYP - paidSYP);
-    document.getElementById('remainingUSD').innerText=(debtUSD - paidUSD);
+    document.getElementById('remainingSYP').innerText=(debtSYP-paidSYP);
+    document.getElementById('remainingUSD').innerText=(debtUSD-paidUSD);
 
     let transactionsDiv=document.getElementById('transactions');
     transactionsDiv.innerHTML='';
@@ -81,19 +75,22 @@ function renderSingleAccount(){
     });
 }
 
-function addPaymentOrDebt(type){
-    let amountInput=prompt('ادخل المبلغ:');
+function addPayment(currency){
+    let amountInput=prompt('ادخل مبلغ الدفعة:');
     let amount=parseFloat(amountInput);
     if(isNaN(amount) || amount<=0) return alert('مبلغ غير صحيح');
-    let currency=prompt('اختر العملة: سوري او دولار');
-    if(currency!=='سوري' && currency!=='دولار') return alert('اختر العملة صحيحة');
-    let today = new Date().toLocaleDateString('ar-EG');
-
-    if(type==='payment') accounts[currentAccount].payments.push({amount:amount, currency:currency, date:today});
-    else accounts[currentAccount].debts.push({amount:amount, currency:currency, date:today});
-
+    let today=new Date().toLocaleDateString('ar-EG');
+    accounts[currentAccount].payments.push({amount:amount, currency:currency, date:today});
     saveAccounts();
-    renderSingleAccount();
+}
+
+function addDebt(currency){
+    let amountInput=prompt('ادخل مبلغ الدين:');
+    let amount=parseFloat(amountInput);
+    if(isNaN(amount) || amount<=0) return alert('مبلغ غير صحيح');
+    let today=new Date().toLocaleDateString('ar-EG');
+    accounts[currentAccount].debts.push({amount:amount, currency:currency, date:today});
+    saveAccounts();
 }
 
 function deleteTransaction(type,index){
@@ -107,13 +104,14 @@ function deleteTransaction(type,index){
 
 function savePDF(index){
     let acc = accounts[index];
-    let content=`حساب: ${acc.name}\nالعملات:\n`;
+    let content=`حساب: ${acc.name}\n`;
     content+=`مدفوع بالليرة: ${acc.payments.filter(t=>t.currency==='سوري').reduce((a,b)=>a+b.amount,0)}\n`;
     content+=`مدفوع بالدولار: ${acc.payments.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0)}\n`;
     content+=`ديون بالليرة: ${acc.debts.filter(t=>t.currency==='سوري').reduce((a,b)=>a+b.amount,0)}\n`;
     content+=`ديون بالدولار: ${acc.debts.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0)}\n`;
     content+=`ما تبقى بالليرة: ${(acc.debts.filter(t=>t.currency==='سوري').reduce((a,b)=>a+b.amount,0))-(acc.payments.filter(t=>t.currency==='سوري').reduce((a,b)=>a+b.amount,0))}\n`;
-    content+=`ما تبقى بالدولار: ${(acc.debts.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0))-(acc.payments.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0))}\n\nالمدفوعات:\n`;
+    content+=`ما تبقى بالدولار: ${(acc.debts.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0))-(acc.payments.filter(t=>t.currency==='دولار').reduce((a,b)=>a+b.amount,0))}\n\n`;
+    content+=`المدفوعات:\n`;
     acc.payments.forEach(p=>{ content+=`${p.date} دفعة ${p.amount} ${p.currency}\n`});
     acc.debts.forEach(d=>{ content+=`${d.date} دين ${d.amount} ${d.currency}\n`});
     let blob = new Blob([content],{type:"text/plain"});
