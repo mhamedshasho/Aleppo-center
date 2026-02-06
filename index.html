@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center</title>
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 <h1>Aleppo Center - دفتر الحسابات</h1>
@@ -54,5 +55,10 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').then(()=>console.log('Service Worker Registered'));
+}
+</script>
 </body>
 </html>
