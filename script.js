@@ -1,146 +1,111 @@
-let accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+let accounts = JSON.parse(localStorage.getItem('accounts') || "[]");
 let currentAccountIndex = null;
 
-function save() {
-    localStorage.setItem("accounts", JSON.stringify(accounts));
-}
-
-function today() {
-    return new Date().toLocaleDateString("ar-EG");
+function saveAccounts() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    renderAccounts();
 }
 
 function addAccount() {
-    let name = accountName.value.trim();
-    let debt = parseFloat(accountDebt.value) || 0;
-    let currency = accountCurrency.value;
+    let name = document.getElementById('accountName').value.trim();
+    let debt = parseFloat(document.getElementById('accountDebt').value) || 0;
+    let currency = document.getElementById('accountCurrency').value;
+    if(!name) return alert('ادخل اسم الحساب');
+    if(accounts.find(a => a.name === name)) return alert('هذا الحساب موجود');
+    accounts.push({name, payments: []});
+    if(debt>0) accounts[accounts.length-1].payments.push({type:'debt', amount:debt, currency:currency, date: new Date().toLocaleDateString('ar-EG')});
+    saveAccounts();
+    document.getElementById('accountName').value='';
+    document.getElementById('accountDebt').value='';
+}
 
-    if (!name) return;
+function deleteAccount(index) {
+    if(confirm('هل تريد حذف الحساب؟')) {
+        accounts.splice(index,1);
+        saveAccounts();
+    }
+}
 
-    accounts.push({
-        name,
-        debts: {
-            USD: currency === "USD" ? debt : 0,
-            SYP: currency === "SYP" ? debt : 0
-        },
-        payments: []
+function showAccount(index) {
+    currentAccountIndex = index;
+    document.getElementById('mainPage').classList.add('hidden');
+    document.getElementById('accountPage').classList.remove('hidden');
+    document.getElementById('accountTitle').innerText = accounts[index].name;
+    renderPayments(index);
+}
+
+function backToMain() {
+    currentAccountIndex = null;
+    document.getElementById('accountPage').classList.add('hidden');
+    document.getElementById('mainPage').classList.remove('hidden');
+}
+
+function addPaymentOrDebt() {
+    let amount = parseFloat(document.getElementById('paymentAmount').value);
+    let type = document.getElementById('paymentType').value;
+    let currency = document.getElementById('paymentCurrency').value;
+    if(isNaN(amount) || amount<=0) return alert('ادخل مبلغ صحيح');
+    let today = new Date().toLocaleDateString('ar-EG');
+    accounts[currentAccountIndex].payments.push({type, amount, currency, date: today});
+    document.getElementById('paymentAmount').value='';
+    saveAccounts();
+}
+
+function deletePayment(payIndex) {
+    accounts[currentAccountIndex].payments.splice(payIndex,1);
+    saveAccounts();
+}
+
+function calcTotals(acc) {
+    let debtSYP=0, debtUSD=0, paidSYP=0, paidUSD=0;
+    acc.payments.forEach(p=>{
+        if(p.type==='debt'){
+            if(p.currency==='SYP') debtSYP+=p.amount; else debtUSD+=p.amount;
+        } else if(p.type==='payment'){
+            if(p.currency==='SYP') paidSYP+=p.amount; else paidUSD+=p.amount;
+        }
     });
-
-    save();
-    accountName.value = "";
-    accountDebt.value = "";
-    renderAccounts();
+    return {debtSYP, debtUSD, paidSYP, paidUSD, remainingSYP: debtSYP-paidSYP, remainingUSD: debtUSD-paidUSD};
 }
 
 function renderAccounts() {
-    accountsList.innerHTML = "";
-    accounts.forEach((a, i) => {
-        let div = document.createElement("div");
-        div.className = "account";
-        div.innerHTML = `
-            <strong>${a.name}</strong>
-            <button onclick="openAccount(${i})">فتح</button>
-            <button onclick="deleteAccount(${i})">حذف</button>
-        `;
-        accountsList.appendChild(div);
+    let container = document.getElementById('accountsList');
+    container.innerHTML = '';
+    accounts.forEach((acc,index)=>{
+        let div = document.createElement('div');
+        div.className='account';
+        div.innerHTML = `<span>${acc.name}</span>
+        <div>
+        <button onclick="deleteAccount(${index})">حذف</button>
+        </div>`;
+        div.onclick = function(e){
+            if(e.target.tagName!=='BUTTON') showAccount(index);
+        };
+        container.appendChild(div);
     });
 }
 
-function deleteAccount(i) {
-    if (!confirm("حذف الحساب؟")) return;
-    accounts.splice(i, 1);
-    save();
-    renderAccounts();
-}
+function renderPayments(index) {
+    let acc = accounts[index];
+    let totals = calcTotals(acc);
+    document.getElementById('debtSYP').innerText = totals.debtSYP;
+    document.getElementById('debtUSD').innerText = totals.debtUSD;
+    document.getElementById('paidSYP').innerText = totals.paidSYP;
+    document.getElementById('paidUSD').innerText = totals.paidUSD;
+    document.getElementById('remainingSYP').innerText = totals.remainingSYP;
+    document.getElementById('remainingUSD').innerText = totals.remainingUSD;
 
-function openAccount(i) {
-    currentAccountIndex = i;
-    accountsPage.classList.add("hidden");
-    accountPage.classList.remove("hidden");
-    renderAccountPage();
-}
-
-function backToAccounts() {
-    accountPage.classList.add("hidden");
-    accountsPage.classList.remove("hidden");
-}
-
-function addPayment() {
-    let amount = parseFloat(paymentAmount.value);
-    if (!amount) return;
-
-    let currency = paymentCurrency.value;
-    let type = paymentType.value;
-
-    accounts[currentAccountIndex].payments.push({
-        amount,
-        currency,
-        type,
-        date: today()
-    });
-
-    paymentAmount.value = "";
-    save();
-    renderAccountPage();
-}
-
-function deletePayment(i) {
-    accounts[currentAccountIndex].payments.splice(i, 1);
-    save();
-    renderAccountPage();
-}
-
-function renderAccountPage() {
-    let a = accounts[currentAccountIndex];
-    accountTitle.textContent = a.name;
-
-    let paidUSD = 0, paidSYP = 0;
-
-    a.payments.forEach(p => {
-        if (p.type === "pay") {
-            if (p.currency === "USD") paidUSD += p.amount;
-            if (p.currency === "SYP") paidSYP += p.amount;
-        }
-        if (p.type === "debt") {
-            if (p.currency === "USD") a.debts.USD += p.amount;
-            if (p.currency === "SYP") a.debts.SYP += p.amount;
+    let filter = document.getElementById('filterCurrency').value;
+    let list = document.getElementById('paymentsList');
+    list.innerHTML = '';
+    acc.payments.forEach((p,i)=>{
+        if(filter==='all' || filter===p.currency){
+            let div = document.createElement('div');
+            div.className='payment';
+            div.innerHTML=`${p.date} - ${p.type==='debt'?'دين':'دفعة'} - ${p.amount} ${p.currency} <button onclick="deletePayment(${i})">حذف</button>`;
+            list.appendChild(div);
         }
     });
-
-    let remainUSD = a.debts.USD - paidUSD;
-    let remainSYP = a.debts.SYP - paidSYP;
-
-    remainUSD.textContent = remainUSD;
-    remainSYP.textContent = remainSYP;
-
-    paymentsList.innerHTML = "";
-
-    let filter = filterCurrency.value;
-    let list = a.payments.filter(p => filter === "ALL" || p.currency === filter);
-
-    list.forEach((p, i) => {
-        let div = document.createElement("div");
-        div.className = "payment";
-        div.innerHTML = `
-            <span>${p.date} - ${p.type === "pay" ? "دفع" : "دين"} ${p.amount} ${p.currency}</span>
-            <button onclick="deletePayment(${i})">✖</button>
-        `;
-        paymentsList.appendChild(div);
-    });
-}
-
-function savePDF() {
-    let a = accounts[currentAccountIndex];
-    let text = `حساب: ${a.name}\nالمتبقي دولار: ${remainUSD.textContent}\nالمتبقي سوري: ${remainSYP.textContent}\n\n`;
-
-    a.payments.forEach(p => {
-        text += `${p.date} - ${p.type} ${p.amount} ${p.currency}\n`;
-    });
-
-    let blob = new Blob([text], { type: "text/plain" });
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = a.name + ".txt";
-    link.click();
 }
 
 renderAccounts();
