@@ -1,132 +1,49 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background: #f2f4f8;
-    color: #333;
-    margin: 0;
-    padding: 10px;
-    direction: rtl;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin:0;
+    padding:0;
 }
 
-h2 {
-    text-align: center;
-    color: #2f80ed;
-    margin-bottom: 15px;
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 10px;
 }
 
-input, select, button {
-    padding: 10px;
+h1, h2, h3 {
+    text-align:center;
+}
+
+input[type=text], input[type=number] {
+    width: calc(100% - 20px);
+    padding: 8px;
     margin: 5px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: #2f80ed;
+    box-sizing: border-box;
 }
 
 button {
-    background-color: #2f80ed;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    background: #4CAF50;
     color: #fff;
     border: none;
-    cursor: pointer;
-    transition: 0.2s;
+    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #1c5bbf;
+    background: #45a049;
 }
 
-.hidden { display: none; }
-
-#accountsList .account {
-    background: #ffffff;
-    padding: 12px 15px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
+.account {
+    background: #fff;
+    margin: 10px 0;
+    padding:10px;
+    border-radius:6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-#accountsList .account button {
-    background-color: #eb5757;
-    padding: 6px 10px;
-    font-size: 14px;
-    margin-left: 5px;
-}
-
-#accountsList .account button:hover {
-    background-color: #c0392b;
-}
-
-#accountPage .summary {
-    display: flex;
-    justify-content: space-between;
-    background: #e0eaff;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    font-size: 16px;
-}
-
-#accountPage .summary div {
-    margin: 5px 0;
-}
-
-#accountPage .add-payment {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-#accountPage .add-payment input, 
-#accountPage .add-payment select, 
-#accountPage .add-payment button {
-    width: 100%;
-}
-
-#accountPage #backBtn {
-    display: block;
-    width: 100%;
-    background-color: #27ae60;
-    margin-bottom: 15px;
-}
-
-#accountPage #backBtn:hover {
-    background-color: #1e8449;
-}
-
-#paymentsList .payment {
-    background: #f0f4ff;
-    padding: 8px 10px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 15px;
-}
-
-#paymentsList .payment button {
-    background-color: #eb5757;
-    padding: 4px 8px;
-    font-size: 12px;
-}
-
-#filterCurrency {
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-@media only screen and (max-width: 480px) {
-    body { padding: 8px; }
-    h2 { font-size: 20px; }
-    input, select, button { font-size: 16px; padding: 12px; }
+.payment {
+    margin:3px 0;
 }
