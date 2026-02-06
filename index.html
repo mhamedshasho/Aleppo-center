@@ -3,59 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aleppo Center</title>
+<title>Aleppo Center - دفتر الدفعات</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Aleppo Center - دفتر الحسابات</h2>
+<div class="container">
 
-<div id="mainPage">
-    <div>
-        <input type="text" id="accountName" placeholder="اسم الحساب">
-        <input type="number" id="accountDebt" placeholder="مجموع الديون">
-        <select id="accountCurrency">
-            <option value="SYP">سوري</option>
-            <option value="USD">دولار</option>
-        </select>
-        <button onclick="addAccount()">اضافة حساب</button>
-    </div>
+<h1>Aleppo Center</h1>
+
+<div id="accountsPage">
+    <h2>الحسابات</h2>
     <div id="accountsList"></div>
+
+    <h3>إضافة حساب جديد</h3>
+    <input type="text" id="accountName" placeholder="اسم الحساب">
+    <input type="number" id="accountDebtSYP" placeholder="ديون بالليرة">
+    <input type="number" id="accountDebtUSD" placeholder="ديون بالدولار">
+    <button onclick="addAccount()">إضافة حساب</button>
 </div>
 
-<div id="accountPage" class="hidden">
-    <button id="backBtn" onclick="backToMain()">الرجوع</button>
+<div id="accountDetailPage" style="display:none;">
+    <button onclick="backToAccounts()">رجوع</button>
     <h2 id="accountTitle"></h2>
-    <div class="summary">
-        <div>ديون بالسوري: <span id="debtSYP">0</span></div>
-        <div>ديون بالدولار: <span id="debtUSD">0</span></div>
-        <div>مدفوع بالسوري: <span id="paidSYP">0</span></div>
-        <div>مدفوع بالدولار: <span id="paidUSD">0</span></div>
-        <div>الباقي بالسوري: <span id="remainingSYP">0</span></div>
-        <div>الباقي بالدولار: <span id="remainingUSD">0</span></div>
-    </div>
-
-    <div class="add-payment">
-        <input type="number" id="paymentAmount" placeholder="المبلغ">
-        <select id="paymentType">
-            <option value="payment">دفعة</option>
-            <option value="debt">دين جديد</option>
-        </select>
-        <select id="paymentCurrency">
-            <option value="SYP">سوري</option>
-            <option value="USD">دولار</option>
-        </select>
-        <button onclick="addPaymentOrDebt()">اضافة</button>
-    </div>
-
-    <select id="filterCurrency" onchange="renderPayments(currentAccountIndex)">
-        <option value="all">كل العملات</option>
-        <option value="SYP">سوري</option>
-        <option value="USD">دولار</option>
-    </select>
-
-    <div id="paymentsList"></div>
+    <div id="accountDebts"></div>
+    <div id="paymentsSYP"></div>
+    <div id="paymentsUSD"></div>
+    <button onclick="addPayment('SYP')">إضافة دفعة بالليرة</button>
+    <button onclick="addPayment('USD')">إضافة دفعة بالدولار</button>
+    <button onclick="savePDF()">حفظ PDF</button>
 </div>
 
+</div>
 <script src="script.js"></script>
 </body>
 </html>
