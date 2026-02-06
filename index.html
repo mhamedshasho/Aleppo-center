@@ -35,8 +35,10 @@
             <p>ما تبقى بالدولار: <span id="remainingUSD">0</span></p>
         </div>
         <div class="account-actions">
-            <button onclick="addPaymentOrDebt('payment')">اضافة دفعة</button>
-            <button onclick="addPaymentOrDebt('debt')">اضافة دين</button>
+            <button onclick="addPayment('سوري')">اضافة دفعة بالليرة</button>
+            <button onclick="addPayment('دولار')">اضافة دفعة بالدولار</button>
+            <button onclick="addDebt('سوري')">اضافة دين بالليرة</button>
+            <button onclick="addDebt('دولار')">اضافة دين بالدولار</button>
             <button onclick="savePDF(currentAccount)">حفظ PDF</button>
         </div>
         <div id="transactions"></div>
