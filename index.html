@@ -1,29 +1,58 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h2>Aleppo Center</h2>
+<div id="accountsPage">
+    <h2>الحسابات</h2>
 
-    <div class="add-account">
-        <input id="accountName" placeholder="اسم الحساب">
-        <input id="accountDebt" type="number" placeholder="المبلغ المطلوب">
-        <select id="accountCurrency">
+    <input id="accountName" placeholder="اسم الحساب">
+    <input id="accountDebt" type="number" placeholder="ما عليه">
+    <select id="accountCurrency">
+        <option value="USD">دولار</option>
+        <option value="SYP">سوري</option>
+    </select>
+    <button onclick="addAccount()">إضافة حساب</button>
+
+    <div id="accountsList"></div>
+</div>
+
+<div id="accountPage" class="hidden">
+    <button onclick="backToAccounts()">⬅ رجوع</button>
+
+    <h2 id="accountTitle"></h2>
+
+    <div class="summary">
+        <div>المتبقي دولار: <span id="remainUSD">0</span></div>
+        <div>المتبقي سوري: <span id="remainSYP">0</span></div>
+    </div>
+
+    <select id="filterCurrency" onchange="renderAccountPage()">
+        <option value="ALL">كل العملات</option>
+        <option value="USD">دولار</option>
+        <option value="SYP">سوري</option>
+    </select>
+
+    <div class="add-payment">
+        <input id="paymentAmount" type="number" placeholder="المبلغ">
+        <select id="paymentCurrency">
             <option value="USD">دولار</option>
             <option value="SYP">سوري</option>
         </select>
-        <button onclick="addAccount()">إضافة حساب</button>
+        <select id="paymentType">
+            <option value="pay">دفع</option>
+            <option value="debt">دين</option>
+        </select>
+        <button onclick="addPayment()">إضافة</button>
     </div>
 
-    <div id="accountsList"></div>
+    <div id="paymentsList"></div>
 
-    <footer>شكراً لمحمد شاشو على تطوير</footer>
+    <button onclick="savePDF()">حفظ PDF</button>
 </div>
 
 <script src="script.js"></script>
