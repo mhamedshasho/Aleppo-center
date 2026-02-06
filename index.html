@@ -7,24 +7,26 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <h1>Aleppo Center</h1>
-    <div class="add-account">
-        <input type="text" id="accountName" placeholder="اسم الحساب">
-        <input type="number" id="accountDebt" placeholder="المبلغ الكلي للحساب">
-        <select id="accountCurrency">
-            <option value="SYP">ليرة سورية</option>
-            <option value="USD">دولار</option>
-        </select>
-        <button onclick="addAccount()">اضافة حساب</button>
+    <div class="container">
+        <h1>Aleppo Center - دفعات الحسابات</h1>
+
+        <div class="add-account">
+            <input type="text" id="accountName" placeholder="اسم الحساب">
+            <input type="number" id="accountDebt" placeholder="مجموع الحساب">
+            <select id="accountCurrency">
+                <option value="SYP">سوري</option>
+                <option value="USD">دولار</option>
+            </select>
+            <button onclick="addAccount()">اضافة حساب</button>
+        </div>
+
+        <div id="accountsList"></div>
+
+        <footer>
+            <p>شكراً لمحمد شاشو على تطوير</p>
+        </footer>
     </div>
 
-    <h2>قائمة الحسابات</h2>
-    <div id="accountsList"></div>
-
-    <footer>شكراً لمحمد شاشو على تطوير</footer>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
