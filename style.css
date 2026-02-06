@@ -15,23 +15,22 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     color: #2c3e50;
-    margin-bottom: 25px;
 }
 
 .section {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 input, select, button {
-    padding: 12px 15px;
-    border-radius: 12px;
+    padding: 10px 15px;
+    border-radius: 10px;
     border: 1px solid #bdc3c7;
     font-size: 16px;
     outline: none;
@@ -56,50 +55,37 @@ button:hover {
 }
 
 .account-card {
-    background: #f8f9fa;
-    border-left: 5px solid #3498db;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 15px 0;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: linear-gradient(135deg,#81ecec,#74b9ff);
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    transition: transform 0.2s;
 }
 
 .account-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transform: scale(1.05);
 }
 
-.account-card h3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 0 10px 0;
-    color: #2c3e50;
-}
-
-.account-card ul {
+ul {
     list-style: none;
     padding: 0;
-    margin: 10px 0;
 }
 
-.account-card li {
+li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     padding: 6px 10px;
     border-radius: 8px;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: background 0.2s ease;
+    background: #f1f2f6;
 }
 
-.account-card li:hover {
-    background: #e1f5fe;
-}
-
-.account-card li button {
+li button {
     background: #e74c3c;
     padding: 5px 10px;
     border: none;
@@ -109,7 +95,7 @@ button:hover {
     cursor: pointer;
 }
 
-.account-card li button:hover {
+li button:hover {
     background: #c0392b;
 }
 
@@ -117,4 +103,15 @@ button:hover {
     margin-top: 15px;
     font-weight: bold;
     color: #27ae60;
+    font-size: 18px;
+}
+
+.backBtn {
+    background: #f39c12;
+    margin-bottom: 15px;
+}
+
+.deleteBtn {
+    background: #e74c3c;
+    margin-top: 10px;
 }
