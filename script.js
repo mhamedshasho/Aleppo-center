@@ -1,85 +1,88 @@
 let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
 
-const accountSelect = document.getElementById('accountSelect');
-const addAccountBtn = document.getElementById('addAccountBtn');
-const addPaymentBtn = document.getElementById('addPaymentBtn');
-
-function updateAccountSelect() {
-    accountSelect.innerHTML = '<option value="">اختر الحساب</option>';
-    accounts.forEach((acc, idx) => {
-        accountSelect.innerHTML += `<option value="${idx}">${acc.name}</option>`;
-    });
+function saveAccounts() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
 }
 
 function addAccount() {
-    const name = document.getElementById('accountName').value.trim();
-    if (!name) return;
-    accounts.push({ name, payments: [] });
-    saveAndRender();
+    let name = document.getElementById('accountName').value.trim();
+    if(!name) return alert('ادخل اسم الحساب');
+    if(accounts.find(a=>a.name===name)) return alert('هذا الحساب موجود مسبقاً');
+    accounts.push({name: name, payments: []});
+    saveAccounts();
     document.getElementById('accountName').value = '';
-}
-
-function addPayment() {
-    const idx = accountSelect.value;
-    const amount = parseFloat(document.getElementById('paymentAmount').value);
-    const currency = document.getElementById('currency').value;
-    if (idx === "" || !amount) return;
-    const today = new Date().toISOString().split('T')[0];
-    accounts[idx].payments.push({ amount, date: today, currency });
-    saveAndRender();
-    document.getElementById('paymentAmount').value = '';
-    accountSelect.value = '';
-}
-
-function deletePayment(accIdx, payIdx) {
-    accounts[accIdx].payments.splice(payIdx, 1);
-    saveAndRender();
-}
-
-function deleteAccount(accIdx) {
-    if (!confirm("هل تريد حذف هذا الحساب؟")) return;
-    accounts.splice(accIdx, 1);
-    saveAndRender();
-}
-
-function saveAndRender() {
-    localStorage.setItem('accounts', JSON.stringify(accounts));
     renderAccounts();
-    updateAccountSelect();
+}
+
+function addPayment(index) {
+    let amount = prompt('ادخل قيمة الدفعة:');
+    let currency = prompt('اختر العملة: SYP او USD:').toUpperCase();
+    if(!amount || isNaN(amount) || (currency!=='USD' && currency!=='SYP')) return alert('ادخل بيانات صحيحة');
+    let date = new Date().toLocaleDateString();
+    accounts[index].payments.push({amount: parseFloat(amount), currency, date});
+    saveAccounts();
+    renderAccounts();
+}
+
+function deletePayment(accIndex, payIndex) {
+    accounts[accIndex].payments.splice(payIndex,1);
+    saveAccounts();
+    renderAccounts();
+}
+
+function savePDF(index) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let account = accounts[index];
+    doc.text(`دفعات الحساب: ${account.name}`, 10, 10);
+
+    let y = 20;
+    account.payments.forEach(p=>{
+        doc.text(`تاريخ: ${p.date} | المبلغ: ${p.amount} ${p.currency}`, 10, y);
+        y+=10;
+    });
+
+    let totalUSD = account.payments.filter(p=>p.currency==='USD').reduce((a,b)=>a+b.amount,0);
+    let totalSYP = account.payments.filter(p=>p.currency==='SYP').reduce((a,b)=>a+b.amount,0);
+
+    doc.text(`مجموع بالدولار: ${totalUSD}`, 10, y+10);
+    doc.text(`مجموع بالليرة السورية: ${totalSYP}`, 10, y+20);
+
+    let totalPaid = account.payments.reduce((a,b)=>{
+        if(b.currency==='USD') return a;
+        return a+b.amount;
+    },0);
+
+    doc.save(`${account.name}.pdf`);
 }
 
 function renderAccounts() {
-    const container = document.getElementById('accountsContainer');
+    let container = document.getElementById('accountsContainer');
     container.innerHTML = '';
-    let totalAll = 0;
-    accounts.forEach((acc, accIdx) => {
-        const totalAcc = acc.payments.reduce((sum, p) => sum + p.amount, 0);
-        totalAll += totalAcc;
-        const card = document.createElement('div');
+
+    accounts.forEach((acc,index)=>{
+        let totalUSD = acc.payments.filter(p=>p.currency==='USD').reduce((a,b)=>a+b.amount,0);
+        let totalSYP = acc.payments.filter(p=>p.currency==='SYP').reduce((a,b)=>a+b.amount,0);
+        let card = document.createElement('div');
         card.className = 'account-card';
         card.innerHTML = `
-            <h3>
-                ${acc.name} 
-                <button onclick="deleteAccount(${accIdx})">حذف الحساب</button>
+            <h3>${acc.name} 
+                <button onclick="addPayment(${index})">إضافة دفعة</button>
+                <button onclick="savePDF(${index})">حفظ PDF</button>
             </h3>
             <ul>
-                ${acc.payments.map((p, payIdx) => `
+                ${acc.payments.map((p,i)=>`
                     <li>
-                        <span>${p.date} - ${p.amount.toFixed(2)} ${p.currency}</span>
-                        <button onclick="deletePayment(${accIdx}, ${payIdx})">حذف</button>
-                    </li>
-                `).join('')}
+                        ${p.date} - ${p.amount} ${p.currency} 
+                        <button onclick="deletePayment(${index},${i})">حذف</button>
+                    </li>`).join('')}
             </ul>
-            <strong>مجموع الحساب: ${totalAcc.toFixed(2)}</strong>
+            <div class="account-summary">
+                مجموع بالدولار: ${totalUSD} | مجموع بالليرة السورية: ${totalSYP}
+            </div>
         `;
         container.appendChild(card);
     });
-    document.getElementById('totalAll').innerText = `مجموع كل الحسابات: ${totalAll.toFixed(2)}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderAccounts();
-    updateAccountSelect();
-    addAccountBtn.addEventListener('click', addAccount);
-    addPaymentBtn.addEventListener('click', addPayment);
-});
+renderAccounts();
