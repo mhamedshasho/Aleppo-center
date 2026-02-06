@@ -5,19 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center - دفتر الدفعات</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <div class="container">
-    <h1>Aleppo Center - دفتر الدفعات</h1>
+    <h1 id="mainTitle">Aleppo Center - دفتر الدفعات</h1>
 
-    <div class="section">
-        <input type="text" id="accountName" placeholder="اسم الحساب">
-        <button onclick="addAccount()">إضافة حساب</button>
+    <div id="mainMenu">
+        <div class="section">
+            <input type="text" id="accountName" placeholder="اسم الحساب">
+            <button onclick="addAccount()">إضافة حساب</button>
+        </div>
+        <div id="accountsContainer"></div>
     </div>
 
-    <div id="accountsContainer"></div>
+    <div id="accountView" style="display:none">
+        <button onclick="backToMain()" class="backBtn">رجوع</button>
+        <h2 id="accountTitle"></h2>
+        <div class="section">
+            <input type="number" id="paymentAmount" placeholder="قيمة الدفعة">
+            <select id="paymentCurrency">
+                <option value="SYP">ليرة سورية</option>
+                <option value="USD">دولار</option>
+            </select>
+            <button onclick="addPaymentToAccount()">إضافة دفعة</button>
+        </div>
+        <ul id="paymentList"></ul>
+        <div id="accountSummary"></div>
+        <canvas id="paymentChart" style="max-height:300px;margin-top:20px;"></canvas>
+        <div class="section">
+            <button onclick="savePDF(currentAccountIndex)">حفظ PDF</button>
+            <button onclick="deleteCurrentAccount()" class="deleteBtn">حذف الحساب</button>
+        </div>
+    </div>
 
     <div class="footer">
         شكراً لمحمد شاشو على تطوير
