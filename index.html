@@ -16,6 +16,7 @@
     <div id="mainMenu">
         <div class="section">
             <input type="text" id="accountName" placeholder="اسم الحساب">
+            <input type="number" id="accountDebt" placeholder="كم عليه (مديونية)">
             <button onclick="addAccount()">إضافة حساب</button>
         </div>
         <div id="accountsContainer"></div>
@@ -30,7 +31,11 @@
                 <option value="SYP">ليرة سورية</option>
                 <option value="USD">دولار</option>
             </select>
-            <button onclick="addPaymentToAccount()">إضافة دفعة</button>
+            <select id="paymentType">
+                <option value="payment">دفعة تم دفعها</option>
+                <option value="debt">ما عليه (دين)</option>
+            </select>
+            <button onclick="addPaymentToAccount()">إضافة</button>
         </div>
         <ul id="paymentList"></ul>
         <div id="accountSummary"></div>
