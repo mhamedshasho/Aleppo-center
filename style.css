@@ -1,49 +1,49 @@
-body {
+body{
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
+    background-color: #f5f5f5;
     margin:0;
     padding:0;
 }
-
-.container {
+.container{
     max-width: 480px;
-    margin: 0 auto;
-    padding: 10px;
-}
-
-h1, h2, h3 {
-    text-align:center;
-}
-
-input[type=text], input[type=number] {
-    width: calc(100% - 20px);
-    padding: 8px;
-    margin: 5px 0;
-    box-sizing: border-box;
-}
-
-button {
-    padding: 8px 12px;
-    margin: 5px;
-    cursor: pointer;
-    background: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-}
-
-button:hover {
-    background: #45a049;
-}
-
-.account {
-    background: #fff;
-    margin: 10px 0;
+    margin:auto;
     padding:10px;
-    border-radius:6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
-.payment {
+h1, h2{
+    text-align:center;
+    color:#2c3e50;
+}
+.add-account input, .add-account select, .add-account button{
+    padding:8px;
+    margin:3px 0;
+    width:100%;
+    box-sizing:border-box;
+}
+button{
+    cursor:pointer;
+    background-color:#3498db;
+    color:white;
+    border:none;
+    border-radius:5px;
+    padding:8px;
+}
+button:hover{
+    background-color:#2980b9;
+}
+.account{
+    background:white;
+    margin:10px 0;
+    padding:10px;
+    border-radius:8px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+.payment, .debt{
+    margin:5px 0;
+}
+.account-actions button{
+    width:48%;
+    margin:1%;
+}
+.account-summary p{
     margin:3px 0;
 }
