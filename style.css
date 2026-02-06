@@ -1,187 +1,76 @@
-/* --- إعدادات أساسية للجوال --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f6f8;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
     margin: 0;
-    padding: 0;
-}
-
-.container {
-    width: 100%;
-    max-width: 480px;
-    margin: auto;
     padding: 10px;
 }
-
-/* --- شريط الحساب العلوي عند الدخول على الحساب --- */
-#singleAccountPage {
-    position: relative;
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
 }
-
-#singleAccountHeader {
-    position: sticky;
-    top: 0;
-    background: linear-gradient(90deg, #00a8ff, #0097e6);
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 12px 15px;
-    border-radius: 0 0 15px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 1000;
+#mainView, #accountDetail {
+    max-width: 500px;
+    margin: auto;
 }
-
-#singleAccountHeader button {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 10px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-#singleAccountHeader button:hover {
-    background: rgba(255,255,255,0.4);
-}
-
-/* --- قائمة الحسابات --- */
-.account {
+.account, #accountDetail {
     background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    border-radius: 10px;
     margin-bottom: 15px;
-    padding: 12px 15px;
-    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
-.account:hover {
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
 .account-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 15px;
 }
-
+.account-header span {
+    font-weight: bold;
+    cursor: pointer;
+}
 .account-header button {
     background: #e74c3c;
-    border: none;
     color: #fff;
-    padding: 5px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.3s;
-}
-
-.account-header button:hover {
-    background: #c0392b;
-}
-
-/* --- المدفوعات --- */
-.payments {
-    margin-left: 10px;
-}
-
-.payment {
-    background: #f1f1f1;
-    padding: 6px 10px;
-    border-radius: 8px;
-    margin-bottom: 5px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.payment button {
-    background: #e74c3c;
     border: none;
-    color: #fff;
-    padding: 2px 6px;
+    padding: 5px 10px;
     border-radius: 5px;
-    font-size: 12px;
     cursor: pointer;
-    transition: 0.3s;
 }
-
-.payment button:hover {
-    background: #c0392b;
+.add-section button, .add-account-section button {
+    margin: 5px;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #3498db;
+    color: #fff;
 }
-
-/* --- أزرار إضافة دفعة أو PDF --- */
-.add-payment {
+#backBtn {
+    background: #95a5a6;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 10px;
 }
-
-.add-payment button {
-    background: #00b894;
-    border: none;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-right: 5px;
-    transition: 0.3s;
-}
-
-.add-payment button:hover {
-    background: #019875;
-}
-
-/* --- اختيار العملة --- */
-select {
-    padding: 5px 8px;
-    border-radius: 8px;
+th, td {
     border: 1px solid #ccc;
-    font-size: 14px;
-    margin-left: 5px;
-}
-
-/* --- الحقول والمدخلات --- */
-input[type=text], input[type=number] {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-/* --- تحسين المظهر العام للجوال --- */
-@media only screen and (max-width: 480px) {
-    .container {
-        padding: 5px;
-    }
-
-    .account-header span {
-        font-size: 14px;
-    }
-
-    .payment {
-        font-size: 13px;
-    }
-
-    .add-payment button {
-        font-size: 13px;
-        padding: 5px 10px;
-    }
-}
-
-/* --- نص شكر مطور --- */
-footer {
+    padding: 5px;
     text-align: center;
-    font-size: 12px;
-    margin-top: 15px;
-    color: #555;
+}
+th {
+    background: #ddd;
+}
+input, select {
+    padding: 5px;
+    margin: 2px;
+}
+.totals {
+    margin-top: 10px;
 }
