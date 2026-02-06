@@ -5,133 +5,117 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center - دفتر الدفعات</title>
 <style>
-    :root {
-        --primary: #2C3E50;
-        --primary-light: #34495E;
-        --accent: #1ABC9C;
-        --bg: #ECF0F1;
-        --card: #FFFFFF;
-        --shadow: 0 8px 20px rgba(0,0,0,0.08);
-        --radius: 15px;
-        --transition: all 0.3s ease;
-        --text: #2C3E50;
-    }
+:root {
+    --primary: #2C3E50;
+    --primary-light: #34495E;
+    --accent: #1ABC9C;
+    --bg: #ECF0F1;
+    --card: #FFFFFF;
+    --shadow: 0 8px 20px rgba(0,0,0,0.08);
+    --radius: 15px;
+    --transition: all 0.3s ease;
+    --text: #2C3E50;
+}
 
-    * {margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+* {margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+body { background: var(--bg); color: var(--text); }
 
-    body { background: var(--bg); color: var(--text); }
+header {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    padding: 25px 20px;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
+}
 
-    header {
-        background: var(--primary);
-        color: white;
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        padding: 25px 20px;
-        border-radius: 0 0 var(--radius) var(--radius);
-        box-shadow: var(--shadow);
-    }
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
 
-    .container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+}
 
-    .controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
+.controls input, .controls select, .controls button {
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid #ccc;
+    transition: var(--transition);
+}
 
-    .controls input, .controls select, .controls button {
-        padding: 12px 16px;
-        font-size: 1rem;
-        border-radius: var(--radius);
-        border: 1px solid #ccc;
-        transition: var(--transition);
-    }
+.controls input:focus, .controls select:focus { border-color: var(--accent); outline: none; }
+.controls input { flex: 1; border: 1px solid #bdc3c7; }
+.controls select { min-width: 120px; }
 
-    .controls input:focus, .controls select:focus { border-color: var(--accent); outline: none; }
+.controls button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    min-width: 130px;
+}
+.controls button:hover { background: #16a085; }
 
-    .controls input { flex: 1; border: 1px solid #bdc3c7; }
-    .controls select { min-width: 120px; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
 
-    .controls button {
-        background: var(--accent);
-        color: white;
-        border: none;
-        cursor: pointer;
-        min-width: 130px;
-    }
-    .controls button:hover { background: #16a085; }
+th, td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    transition: var(--transition);
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: var(--card);
-        border-radius: var(--radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-    }
+th { background: var(--primary-light); color: white; font-weight: 600; font-size: 1rem; }
+td { font-size: 0.95rem; }
 
-    th, td {
-        padding: 14px 12px;
-        text-align: center;
-        border-bottom: 1px solid #eee;
-        transition: var(--transition);
-    }
+td button {
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    margin: 2px;
+    transition: var(--transition);
+}
 
-    th {
-        background: var(--primary-light);
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-    }
+.edit-btn { background: #f39c12; color: white; }
+.edit-btn:hover { background: #d68910; }
+.delete-btn { background: #e74c3c; color: white; }
+.delete-btn:hover { background: #c0392b; }
 
-    td { font-size: 0.95rem; }
+.save-btns { margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap; }
+.save-btns button {
+    padding: 14px 22px;
+    font-size: 1rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.save-btns button:hover { background: #16a085; }
 
-    td button {
-        padding: 7px 12px;
-        font-size: 0.85rem;
-        border-radius: var(--radius);
-        border: none;
-        cursor: pointer;
-        margin: 2px;
-        transition: var(--transition);
-    }
-
-    .edit-btn { background: #f39c12; color: white; }
-    .edit-btn:hover { background: #d68910; }
-
-    .delete-btn { background: #e74c3c; color: white; }
-    .delete-btn:hover { background: #c0392b; }
-
-    .save-btns {
-        margin-top: 25px;
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .save-btns button {
-        padding: 14px 22px;
-        font-size: 1rem;
-        background: var(--accent);
-        color: white;
-        border: none;
-        border-radius: var(--radius);
-        cursor: pointer;
-        transition: var(--transition);
-    }
-
-    .save-btns button:hover { background: #16a085; }
-
-    @media(max-width:650px){
-        .controls { flex-direction: column; }
-        th, td { font-size: 0.85rem; padding:10px; }
-    }
+@media(max-width:650px){
+    .controls { flex-direction: column; }
+    th, td { font-size: 0.85rem; padding:10px; }
+}
 </style>
 </head>
 <body>
@@ -159,8 +143,7 @@
                 <th>إجراءات</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <div class="save-btns">
@@ -169,8 +152,11 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
-let payments = [];
+let payments = JSON.parse(localStorage.getItem('payments') || '[]');
 let editIndex = null;
 
 const nameInput = document.getElementById('name');
@@ -203,11 +189,12 @@ function renderTable() {
         `;
         tableBody.appendChild(row);
     });
+    localStorage.setItem('payments', JSON.stringify(payments));
 }
 
 function addPayment() {
     const name = nameInput.value.trim();
-    const amount = amountInput.value.trim();
+    const amount = Number(amountInput.value.trim());
     const currency = currencySelect.value;
 
     if(!name || !amount) return alert('الرجاء إدخال جميع الحقول');
@@ -244,6 +231,7 @@ function deletePayment(index){
 }
 
 addBtn.addEventListener('click', addPayment);
+renderTable();
 
 // حفظ كصورة
 document.getElementById('saveImageBtn').addEventListener('click', ()=>{
@@ -269,9 +257,6 @@ document.getElementById('savePdfBtn').addEventListener('click', ()=>{
     });
 });
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </body>
 </html>
