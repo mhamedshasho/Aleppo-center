@@ -4,119 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center - دفتر الدفعات</title>
-<style>
-:root {
-    --primary: #2C3E50;
-    --primary-light: #34495E;
-    --accent: #1ABC9C;
-    --bg: #ECF0F1;
-    --card: #FFFFFF;
-    --shadow: 0 8px 20px rgba(0,0,0,0.08);
-    --radius: 15px;
-    --transition: all 0.3s ease;
-    --text: #2C3E50;
-}
-
-* {margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-body { background: var(--bg); color: var(--text); }
-
-header {
-    background: var(--primary);
-    color: white;
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: 700;
-    padding: 25px 20px;
-    border-radius: 0 0 var(--radius) var(--radius);
-    box-shadow: var(--shadow);
-}
-
-.container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.controls input, .controls select, .controls button {
-    padding: 12px 16px;
-    font-size: 1rem;
-    border-radius: var(--radius);
-    border: 1px solid #ccc;
-    transition: var(--transition);
-}
-
-.controls input:focus, .controls select:focus { border-color: var(--accent); outline: none; }
-.controls input { flex: 1; border: 1px solid #bdc3c7; }
-.controls select { min-width: 120px; }
-
-.controls button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    cursor: pointer;
-    min-width: 130px;
-}
-.controls button:hover { background: #16a085; }
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--card);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-th, td {
-    padding: 14px 12px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    transition: var(--transition);
-}
-
-th { background: var(--primary-light); color: white; font-weight: 600; font-size: 1rem; }
-td { font-size: 0.95rem; }
-
-td button {
-    padding: 7px 12px;
-    font-size: 0.85rem;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
-    margin: 2px;
-    transition: var(--transition);
-}
-
-.edit-btn { background: #f39c12; color: white; }
-.edit-btn:hover { background: #d68910; }
-.delete-btn { background: #e74c3c; color: white; }
-.delete-btn:hover { background: #c0392b; }
-
-.save-btns { margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap; }
-.save-btns button {
-    padding: 14px 22px;
-    font-size: 1rem;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-.save-btns button:hover { background: #16a085; }
-
-@media(max-width:650px){
-    .controls { flex-direction: column; }
-    th, td { font-size: 0.85rem; padding:10px; }
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -143,7 +31,8 @@ td button {
                 <th>إجراءات</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+        </tbody>
     </table>
 
     <div class="save-btns">
@@ -154,109 +43,7 @@ td button {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-let payments = JSON.parse(localStorage.getItem('payments') || '[]');
-let editIndex = null;
-
-const nameInput = document.getElementById('name');
-const amountInput = document.getElementById('amount');
-const currencySelect = document.getElementById('currency');
-const addBtn = document.getElementById('addBtn');
-const tableBody = document.querySelector('#paymentTable tbody');
-
-function getCurrentDate() {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth()+1).padStart(2,'0');
-    const day = String(d.getDate()).padStart(2,'0');
-    return `${year}-${month}-${day}`;
-}
-
-function renderTable() {
-    tableBody.innerHTML = '';
-    payments.forEach((p, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${p.name}</td>
-            <td>${p.amount} ${p.currency}</td>
-            <td>${p.date}</td>
-            <td>
-                <button class="edit-btn" onclick="editPayment(${index})">تعديل</button>
-                <button class="delete-btn" onclick="deletePayment(${index})">حذف</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-    localStorage.setItem('payments', JSON.stringify(payments));
-}
-
-function addPayment() {
-    const name = nameInput.value.trim();
-    const amount = Number(amountInput.value.trim());
-    const currency = currencySelect.value;
-
-    if(!name || !amount) return alert('الرجاء إدخال جميع الحقول');
-
-    const date = getCurrentDate();
-
-    if(editIndex !== null){
-        payments[editIndex] = {name, amount, currency, date};
-        editIndex = null;
-        addBtn.textContent = 'إضافة دفعة';
-    } else {
-        payments.push({name, amount, currency, date});
-    }
-
-    nameInput.value = '';
-    amountInput.value = '';
-    currencySelect.value = 'SYP';
-    renderTable();
-}
-
-function editPayment(index){
-    nameInput.value = payments[index].name;
-    amountInput.value = payments[index].amount;
-    currencySelect.value = payments[index].currency;
-    addBtn.textContent = 'حفظ التعديل';
-    editIndex = index;
-}
-
-function deletePayment(index){
-    if(confirm('هل أنت متأكد من حذف هذه الدفعة؟')){
-        payments.splice(index,1);
-        renderTable();
-    }
-}
-
-addBtn.addEventListener('click', addPayment);
-renderTable();
-
-// حفظ كصورة
-document.getElementById('saveImageBtn').addEventListener('click', ()=>{
-    html2canvas(document.querySelector('.container')).then(canvas=>{
-        const link = document.createElement('a');
-        link.download='aleppo-center-payments.png';
-        link.href = canvas.toDataURL();
-        link.click();
-    });
-});
-
-// حفظ كـ PDF
-document.getElementById('savePdfBtn').addEventListener('click', ()=>{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.html(document.querySelector('.container'), {
-        callback: function(pdf){
-            pdf.save('aleppo-center-payments.pdf');
-        },
-        x: 10,
-        y: 10,
-        width: 180
-    });
-});
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
