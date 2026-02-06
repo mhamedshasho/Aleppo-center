@@ -1,24 +1,27 @@
+/* أساسي */
 body {
     font-family: 'Arial', sans-serif;
-    background: #f5f6fa;
+    background: #f2f4f8;
     color: #333;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
     direction: rtl;
 }
 
+/* عنوان */
 h2 {
     text-align: center;
     color: #2f80ed;
     margin-bottom: 15px;
 }
 
+/* مدخلات وأزرار */
 input, select, button {
-    padding: 8px 10px;
+    padding: 10px;
     margin: 5px 0;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 1px solid #ccc;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 input:focus, select:focus {
@@ -38,61 +41,126 @@ button:hover {
     background-color: #1c5bbf;
 }
 
+/* إخفاء العناصر حسب الحاجة */
 .hidden { display: none; }
 
-#accountsList .account, #paymentsList .payment {
-    background: #fff;
-    padding: 10px 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* قائمة الحسابات */
+#accountsList .account {
+    background: #ffffff;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+#accountsList .account-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
-#accountsList .account button, #paymentsList .payment button {
+#accountsList .account button {
+    background-color: #eb5757;
+    padding: 6px 10px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+#accountsList .account button:hover {
+    background-color: #c0392b;
+}
+
+/* قائمة الدفعات */
+#paymentsList .payment {
+    background: #f0f4ff;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+}
+
+#paymentsList .payment button {
     background-color: #eb5757;
     padding: 4px 8px;
     font-size: 12px;
 }
 
-#accountsList .account button:hover, #paymentsList .payment button:hover {
-    background-color: #c0392b;
-}
-
+/* صفحة الحساب المفرد */
 #accountPage .summary {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     background: #e0eaff;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 12px;
+    border-radius: 10px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
+    font-size: 16px;
 }
 
+#accountPage .summary div {
+    margin: 5px 0;
+}
+
+/* إضافة دفعة */
 #accountPage .add-payment {
     display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+    flex-direction: column;
+    gap: 8px;
     margin-bottom: 15px;
 }
 
 #accountPage .add-payment input, 
 #accountPage .add-payment select, 
 #accountPage .add-payment button {
-    flex: 1;
-}
-
-#accountPage button {
-    margin-top: 10px;
-}
-
-#accountsPage input, #accountsPage select, #accountsPage button {
-    display: block;
     width: 100%;
 }
 
+/* زر الرجوع */
+#accountPage #backBtn {
+    display: block;
+    width: 100%;
+    background-color: #27ae60;
+    margin-bottom: 15px;
+}
+
+#accountPage #backBtn:hover {
+    background-color: #1e8449;
+}
+
+/* تصفية العملة */
 #filterCurrency {
-    width: 150px;
+    width: 100%;
     margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* تخصيص للهواتف فقط */
+@media only screen and (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input, select, button {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    #accountsList .account, #paymentsList .payment {
+        font-size: 16px;
+    }
+
+    #accountPage .summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
