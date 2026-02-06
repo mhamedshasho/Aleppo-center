@@ -3,37 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aleppo Center - دفتر الدفعات</title>
+<title>Aleppo Center</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
+    <h1>Aleppo Center</h1>
 
-<h1>Aleppo Center</h1>
+    <div id="accountsPage">
+        <div class="add-account">
+            <input type="text" id="accountName" placeholder="اسم الحساب">
+            <input type="number" id="accountDebt" placeholder="مجموع الحساب">
+            <select id="accountCurrency">
+                <option value="سوري">سوري</option>
+                <option value="دولار">دولار</option>
+            </select>
+            <button onclick="addAccount()">اضافة حساب</button>
+        </div>
+        <div id="accountsList"></div>
+    </div>
 
-<div id="accountsPage">
-    <h2>الحسابات</h2>
-    <div id="accountsList"></div>
-
-    <h3>إضافة حساب جديد</h3>
-    <input type="text" id="accountName" placeholder="اسم الحساب">
-    <input type="number" id="accountDebtSYP" placeholder="ديون بالليرة">
-    <input type="number" id="accountDebtUSD" placeholder="ديون بالدولار">
-    <button onclick="addAccount()">إضافة حساب</button>
+    <div id="singleAccountPage" style="display:none;">
+        <button onclick="backToAccounts()">رجوع</button>
+        <h2 id="accTitle"></h2>
+        <div class="account-summary">
+            <p>مدفوع بالليرة: <span id="paidSYP">0</span></p>
+            <p>مدفوع بالدولار: <span id="paidUSD">0</span></p>
+            <p>ديون بالليرة: <span id="debtSYP">0</span></p>
+            <p>ديون بالدولار: <span id="debtUSD">0</span></p>
+            <p>ما تبقى بالليرة: <span id="remainingSYP">0</span></p>
+            <p>ما تبقى بالدولار: <span id="remainingUSD">0</span></p>
+        </div>
+        <div class="account-actions">
+            <button onclick="addPaymentOrDebt('payment')">اضافة دفعة</button>
+            <button onclick="addPaymentOrDebt('debt')">اضافة دين</button>
+            <button onclick="savePDF(currentAccount)">حفظ PDF</button>
+        </div>
+        <div id="transactions"></div>
+    </div>
 </div>
 
-<div id="accountDetailPage" style="display:none;">
-    <button onclick="backToAccounts()">رجوع</button>
-    <h2 id="accountTitle"></h2>
-    <div id="accountDebts"></div>
-    <div id="paymentsSYP"></div>
-    <div id="paymentsUSD"></div>
-    <button onclick="addPayment('SYP')">إضافة دفعة بالليرة</button>
-    <button onclick="addPayment('USD')">إضافة دفعة بالدولار</button>
-    <button onclick="savePDF()">حفظ PDF</button>
-</div>
-
-</div>
 <script src="script.js"></script>
 </body>
 </html>
