@@ -1,98 +1,85 @@
-let payments = [];
-let editIndex = null;
+let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
 
-const nameInput = document.getElementById('name');
-const amountInput = document.getElementById('amount');
-const currencySelect = document.getElementById('currency');
-const addBtn = document.getElementById('addBtn');
-const tableBody = document.querySelector('#paymentTable tbody');
+const accountSelect = document.getElementById('accountSelect');
+const addAccountBtn = document.getElementById('addAccountBtn');
+const addPaymentBtn = document.getElementById('addPaymentBtn');
 
-function getCurrentDate() {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth()+1).padStart(2,'0');
-    const day = String(d.getDate()).padStart(2,'0');
-    return `${year}-${month}-${day}`;
+function updateAccountSelect() {
+    accountSelect.innerHTML = '<option value="">اختر الحساب</option>';
+    accounts.forEach((acc, idx) => {
+        accountSelect.innerHTML += `<option value="${idx}">${acc.name}</option>`;
+    });
 }
 
-function renderTable() {
-    tableBody.innerHTML = '';
-    payments.forEach((p, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${p.name}</td>
-            <td>${p.amount} ${p.currency}</td>
-            <td>${p.date}</td>
-            <td>
-                <button class="edit-btn" onclick="editPayment(${index})">تعديل</button>
-                <button class="delete-btn" onclick="deletePayment(${index})">حذف</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+function addAccount() {
+    const name = document.getElementById('accountName').value.trim();
+    if (!name) return;
+    accounts.push({ name, payments: [] });
+    saveAndRender();
+    document.getElementById('accountName').value = '';
 }
 
 function addPayment() {
-    const name = nameInput.value.trim();
-    const amount = amountInput.value.trim();
-    const currency = currencySelect.value;
-
-    if(!name || !amount) return alert('الرجاء إدخال جميع الحقول');
-
-    const date = getCurrentDate();
-
-    if(editIndex !== null){
-        payments[editIndex] = {name, amount, currency, date};
-        editIndex = null;
-        addBtn.textContent = 'إضافة دفعة';
-    } else {
-        payments.push({name, amount, currency, date});
-    }
-
-    nameInput.value = '';
-    amountInput.value = '';
-    currencySelect.value = 'SYP';
-    renderTable();
+    const idx = accountSelect.value;
+    const amount = parseFloat(document.getElementById('paymentAmount').value);
+    const currency = document.getElementById('currency').value;
+    if (idx === "" || !amount) return;
+    const today = new Date().toISOString().split('T')[0];
+    accounts[idx].payments.push({ amount, date: today, currency });
+    saveAndRender();
+    document.getElementById('paymentAmount').value = '';
+    accountSelect.value = '';
 }
 
-function editPayment(index){
-    nameInput.value = payments[index].name;
-    amountInput.value = payments[index].amount;
-    currencySelect.value = payments[index].currency;
-    addBtn.textContent = 'حفظ التعديل';
-    editIndex = index;
+function deletePayment(accIdx, payIdx) {
+    accounts[accIdx].payments.splice(payIdx, 1);
+    saveAndRender();
 }
 
-function deletePayment(index){
-    if(confirm('هل أنت متأكد من حذف هذه الدفعة؟')){
-        payments.splice(index,1);
-        renderTable();
-    }
+function deleteAccount(accIdx) {
+    if (!confirm("هل تريد حذف هذا الحساب؟")) return;
+    accounts.splice(accIdx, 1);
+    saveAndRender();
 }
 
-addBtn.addEventListener('click', addPayment);
+function saveAndRender() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    renderAccounts();
+    updateAccountSelect();
+}
 
-// حفظ كصورة
-document.getElementById('saveImageBtn').addEventListener('click', ()=>{
-    html2canvas(document.querySelector('.container')).then(canvas=>{
-        const link = document.createElement('a');
-        link.download='aleppo-center-payments.png';
-        link.href = canvas.toDataURL();
-        link.click();
+function renderAccounts() {
+    const container = document.getElementById('accountsContainer');
+    container.innerHTML = '';
+    let totalAll = 0;
+    accounts.forEach((acc, accIdx) => {
+        const totalAcc = acc.payments.reduce((sum, p) => sum + p.amount, 0);
+        totalAll += totalAcc;
+        const card = document.createElement('div');
+        card.className = 'account-card';
+        card.innerHTML = `
+            <h3>
+                ${acc.name} 
+                <button onclick="deleteAccount(${accIdx})">حذف الحساب</button>
+            </h3>
+            <ul>
+                ${acc.payments.map((p, payIdx) => `
+                    <li>
+                        <span>${p.date} - ${p.amount.toFixed(2)} ${p.currency}</span>
+                        <button onclick="deletePayment(${accIdx}, ${payIdx})">حذف</button>
+                    </li>
+                `).join('')}
+            </ul>
+            <strong>مجموع الحساب: ${totalAcc.toFixed(2)}</strong>
+        `;
+        container.appendChild(card);
     });
-});
+    document.getElementById('totalAll').innerText = `مجموع كل الحسابات: ${totalAll.toFixed(2)}`;
+}
 
-// حفظ كـ PDF
-document.getElementById('savePdfBtn').addEventListener('click', ()=>{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.html(document.querySelector('.container'), {
-        callback: function(pdf){
-            pdf.save('aleppo-center-payments.pdf');
-        },
-        x: 10,
-        y: 10,
-        width: 180
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    renderAccounts();
+    updateAccountSelect();
+    addAccountBtn.addEventListener('click', addAccount);
+    addPaymentBtn.addEventListener('click', addPayment);
 });
