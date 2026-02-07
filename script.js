@@ -1,14 +1,16 @@
 let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 let current = null;
-let accountSearchText = "";
-let historySearchText = "";
 
-/* ========== حفظ ========== */
+let filterText = "";
+let filterMonth = "";
+let filterYear = "";
+
+/* ===== حفظ ===== */
 function save(){
     localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-/* ========== تاريخ ========== */
+/* ===== تاريخ ===== */
 function getDate(){
     if(confirm("هل تريد تاريخ اليوم تلقائياً؟")){
         return new Date().toLocaleDateString('ar-EG');
@@ -16,215 +18,160 @@ function getDate(){
     return prompt("ادخل التاريخ (YYYY/MM/DD)") || new Date().toLocaleDateString('ar-EG');
 }
 
-/* ========== إضافة حساب ========== */
+/* ===== إضافة حساب ===== */
 function addAccount(){
     let name = accName.value.trim();
-    let amount = Number(accAmount.value) || 0;
-    let cur = accCurrency.value;
-
     if(!name) return alert("ادخل اسم الحساب");
 
-    accounts.push({
-        name,
-        debtSYP: cur==="SYP"?amount:0,
-        debtUSD: cur==="USD"?amount:0,
-        paySYP:0,
-        payUSD:0,
-        history:[]
-    });
+    accounts.push({ name, payments:[] });
 
     accName.value="";
-    accAmount.value="";
     save();
     renderCards();
 }
 
-/* ========== بحث حسابات ========== */
-function searchAccounts(text){
-    accountSearchText = text.trim();
-    renderCards();
-}
-
-/* ========== عرض البطاقات ========== */
+/* ===== عرض الحسابات ===== */
 function renderCards(){
     cards.innerHTML="";
     accounts.forEach((a,i)=>{
-        if(accountSearchText && !a.name.includes(accountSearchText)) return;
-
-        let div=document.createElement("div");
-        div.className="card";
-        div.innerHTML=`<h3>${a.name}</h3><small>اضغط للدخول</small>`;
-        div.onclick=()=>openAccount(i);
-        cards.appendChild(div);
+        let d=document.createElement("div");
+        d.className="card";
+        d.innerHTML=`<h3>${a.name}</h3><small>اضغط للدخول</small>`;
+        d.onclick=()=>openAccount(i);
+        cards.appendChild(d);
     });
 }
 
-/* ========== فتح حساب ========== */
+/* ===== فتح حساب ===== */
 function openAccount(i){
     current=i;
     accountsView.style.display="none";
     accountView.style.display="block";
-    historySearchText="";
     renderAccount();
 }
 
-/* ========== رجوع ========== */
+/* ===== رجوع ===== */
 function back(){
     current=null;
     accountView.style.display="none";
     accountsView.style.display="block";
-    renderCards();
 }
 
-/* ========== حذف حساب ========== */
+/* ===== حذف حساب ===== */
 function deleteAccount(){
     if(!confirm("حذف الحساب نهائياً؟")) return;
     accounts.splice(current,1);
     save();
     back();
+    renderCards();
 }
 
-/* ========== إضافة دين ========== */
-function addDebt(cur){
-    let name = prompt("اسم الدين (مثال: إيجار)");
-    if(!name) return;
+/* ===== إضافة دفعة ===== */
+function addPay(currency){
+    let title = prompt("اسم الدفعة (مثال: إيجار)");
+    if(!title) return;
 
-    let v = Number(prompt("المبلغ"));
-    if(!v || v<=0) return;
+    let amount = Number(prompt("المبلغ"));
+    if(!amount || amount<=0) return;
 
-    let d = getDate();
-    let acc = accounts[current];
+    let date = getDate();
 
-    if(cur==="SYP") acc.debtSYP += v;
-    else acc.debtUSD += v;
-
-    acc.history.push({
-        title:name,
-        type:"دين",
-        currency:cur,
-        amount:v,
-        date:d
-    });
-
+    accounts[current].payments.push({ title, amount, currency, date });
     save();
     renderAccount();
 }
 
-/* ========== إضافة دفعة ========== */
-function addPay(cur){
-    let name = prompt("اسم الدفعة (مثال: دفعة أولى)");
-    if(!name) return;
-
-    let v = Number(prompt("المبلغ"));
-    if(!v || v<=0) return;
-
-    let d = getDate();
-    let acc = accounts[current];
-
-    if(cur==="SYP") acc.paySYP += v;
-    else acc.payUSD += v;
-
-    acc.history.push({
-        title:name,
-        type:"دفعة",
-        currency:cur,
-        amount:v,
-        date:d
-    });
-
-    save();
-    renderAccount();
-}
-
-/* ========== تعديل عملية ========== */
+/* ===== تعديل دفعة ===== */
 function editItem(i){
-    let acc = accounts[current];
-    let h = acc.history[i];
+    let p = accounts[current].payments[i];
 
-    let newName = prompt("اسم العملية", h.title) || h.title;
-    let newAmount = Number(prompt("المبلغ", h.amount));
-    if(!newAmount || newAmount<=0) return;
+    let t = prompt("اسم الدفعة", p.title) || p.title;
+    let a = Number(prompt("المبلغ", p.amount));
+    if(!a || a<=0) return;
 
-    if(h.type==="دين"){
-        if(h.currency==="SYP") acc.debtSYP -= h.amount;
-        else acc.debtUSD -= h.amount;
-    }else{
-        if(h.currency==="SYP") acc.paySYP -= h.amount;
-        else acc.payUSD -= h.amount;
-    }
-
-    h.title = newName;
-    h.amount = newAmount;
-
-    if(h.type==="دين"){
-        if(h.currency==="SYP") acc.debtSYP += newAmount;
-        else acc.debtUSD += newAmount;
-    }else{
-        if(h.currency==="SYP") acc.paySYP += newAmount;
-        else acc.payUSD += newAmount;
-    }
+    p.title = t;
+    p.amount = a;
 
     save();
     renderAccount();
 }
 
-/* ========== حذف عملية ========== */
+/* ===== حذف دفعة ===== */
 function deleteItem(i){
-    let acc = accounts[current];
-    let h = acc.history[i];
-
-    if(!confirm("حذف العملية؟")) return;
-
-    if(h.type==="دين"){
-        if(h.currency==="SYP") acc.debtSYP -= h.amount;
-        else acc.debtUSD -= h.amount;
-    }else{
-        if(h.currency==="SYP") acc.paySYP -= h.amount;
-        else acc.payUSD -= h.amount;
-    }
-
-    acc.history.splice(i,1);
+    if(!confirm("حذف الدفعة؟")) return;
+    accounts[current].payments.splice(i,1);
     save();
     renderAccount();
 }
 
-/* ========== بحث داخل العمليات ========== */
-function searchHistory(text){
-    historySearchText = text.trim();
+/* ===== فلترة ===== */
+function setSearch(v){
+    filterText = v.trim();
+    renderAccount();
+}
+function setMonth(v){
+    filterMonth = v;
+    renderAccount();
+}
+function setYear(v){
+    filterYear = v;
     renderAccount();
 }
 
-/* ========== عرض الحساب ========== */
+/* ===== حساب المجاميع ===== */
+function calculateTotals(list){
+    let syp=0, usd=0;
+    list.forEach(p=>{
+        if(p.currency==="SYP") syp+=p.amount;
+        if(p.currency==="USD") usd+=p.amount;
+    });
+    return {syp, usd, count:list.length};
+}
+
+/* ===== فلترة الدفعات ===== */
+function getFilteredPayments(){
+    return accounts[current].payments.filter(p=>{
+        let ok = true;
+
+        if(filterText && !p.title.includes(filterText)) ok=false;
+
+        let parts = p.date.split("/");
+        let m = parts[1];
+        let y = parts[0];
+
+        if(filterMonth && m !== filterMonth) ok=false;
+        if(filterYear && y !== filterYear) ok=false;
+
+        return ok;
+    });
+}
+
+/* ===== عرض الحساب ===== */
 function renderAccount(){
     let acc = accounts[current];
     title.innerText = acc.name;
 
-    let remainSYP = acc.debtSYP - acc.paySYP;
-    let remainUSD = acc.debtUSD - acc.payUSD;
+    let list = getFilteredPayments();
+    let t = calculateTotals(list);
 
     let html = `
-    <b>سوري</b><br>
-    دين: ${acc.debtSYP}<br>
-    مدفوع: ${acc.paySYP}<br>
-    المتبقي: ${remainSYP}<hr>
+    <b>المجاميع (حسب الفلترة)</b><br>
+    مجموع سوري: ${t.syp}<br>
+    مجموع دولار: ${t.usd}<br>
+    عدد العناصر: ${t.count}
+    <hr>
 
-    <b>دولار</b><br>
-    دين: ${acc.debtUSD}<br>
-    مدفوع: ${acc.payUSD}<br>
-    المتبقي: ${remainUSD}<hr>
-
-    <input placeholder="بحث عن دفعة أو دين" oninput="searchHistory(this.value)">
-    <b>السجل</b>
+    <input placeholder="بحث باسم الدفعة" oninput="setSearch(this.value)">
+    <input placeholder="شهر (01-12)" oninput="setMonth(this.value)">
+    <input placeholder="سنة (2026)" oninput="setYear(this.value)">
+    <hr>
     `;
 
-    acc.history.forEach((h,i)=>{
-        let text = `${h.title} ${h.type} ${h.currency} ${h.amount} ${h.date}`;
-        if(historySearchText && !text.includes(historySearchText)) return;
-
-        html += `
-        <div class="log ${h.type==="دين"?"debt":"pay"}">
-            <b>${h.title}</b><br>
-            ${h.date} – ${h.type} – ${h.amount} ${h.currency}<br>
+    list.forEach((p,i)=>{
+        html+=`
+        <div class="log pay">
+            <b>${p.title}</b><br>
+            ${p.date} – ${p.amount} ${p.currency}<br>
             <button onclick="editItem(${i})">تعديل</button>
             <button onclick="deleteItem(${i})">حذف</button>
         </div>`;
@@ -233,5 +180,5 @@ function renderAccount(){
     info.innerHTML = html;
 }
 
-/* ========== تشغيل ========== */
+/* ===== تشغيل ===== */
 renderCards();
