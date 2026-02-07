@@ -4,7 +4,6 @@ let current = null;
 let filterText="", filterMonth="", filterYear="", accountSearch="";
 
 function save(){ localStorage.setItem("accounts", JSON.stringify(accounts)); }
-
 function getDate(){ return new Date().toLocaleDateString('ar-EG'); }
 
 function addAccount(){
@@ -50,20 +49,38 @@ function deleteAccount(){
 function addPay(currency){
     let title = prompt("اسم الدفعة");
     if(!title) return;
+
     let amount = Number(prompt("المبلغ"));
     if(!amount || amount<=0) return;
+
+    let type = document.getElementById("payType").value;
+
     let date = getDate();
-    accounts[current].payments.push({ title, amount, currency, date });
+    accounts[current].payments.push({ title, amount, currency, type, date });
     save();
     renderAccount();
 }
 
 function editItem(i){
     let p = accounts[current].payments[i];
-    let t = prompt("اسم الدفعة",p.title) || p.title;
-    let a = Number(prompt("المبلغ",p.amount));
-    if(!a || a<=0) return;
-    p.title=t; p.amount=a;
+
+    let title = prompt("اسم الدفعة:", p.title);
+    if(!title) return;
+
+    let amount = Number(prompt("المبلغ:", p.amount));
+    if(!amount || amount<=0) return;
+
+    let type = prompt("نوع الدفعة: له أو عليه", p.type==="credit"?"له":"عليه");
+    type = (type==="له") ? "credit" : "debit";
+
+    let currency = prompt("العملة: SYP أو USD", p.currency);
+    if(currency!=="SYP" && currency!=="USD") currency="SYP";
+
+    p.title = title;
+    p.amount = amount;
+    p.type = type;
+    p.currency = currency;
+
     save();
     renderAccount();
 }
@@ -97,32 +114,45 @@ function getFilteredPayments(){
 }
 
 function renderAccount(){
-    let acc=accounts[current];
-    title.innerText=acc.name;
-    let list=getFilteredPayments();
-    let html=`<table><tr><th>التاريخ</th><th>التفاصيل</th><th>عليه</th><th>له</th><th>الرصيد</th></tr>`;
-    let balance=0;
+    let acc = accounts[current];
+    title.innerText = acc.name;
+
+    let list = getFilteredPayments();
+    let html = `<table>
+        <tr><th>التاريخ</th><th>التفاصيل</th><th>عليه</th><th>له</th><th>الرصيد</th><th>إجراءات</th></tr>`;
+
+    let balance = 0;
     list.forEach((p,i)=>{
-        let debit=0, credit=p.amount;
+        let debit = (p.type==="debit") ? p.amount : 0;
+        let credit = (p.type==="credit") ? p.amount : 0;
         balance += credit - debit;
+
         html+=`<tr>
             <td>${p.date}</td>
             <td>${p.title}</td>
             <td class="amount-negative">${debit}</td>
             <td class="amount-positive">${credit}</td>
             <td>${balance}</td>
+            <td>
+                <button onclick="editItem(${i})">✏️ تعديل</button>
+                <button onclick="deleteItem(${i})">🗑️ حذف</button>
+            </td>
         </tr>`;
     });
-    let totalSYP=list.filter(p=>p.currency==="SYP").reduce((a,b)=>a+b.amount,0);
-    let totalUSD=list.filter(p=>p.currency==="USD").reduce((a,b)=>a+b.amount,0);
+
+    let totalSYP = list.filter(p=>p.currency==="SYP").reduce((a,b)=>a+b.amount,0);
+    let totalUSD = list.filter(p=>p.currency==="USD").reduce((a,b)=>a+b.amount,0);
+
     html+=`<tr class="total">
         <td colspan="2">إجمالي العمليات</td>
         <td>-</td>
         <td>${totalSYP} سوري / ${totalUSD} دولار</td>
         <td>-</td>
+        <td>-</td>
     </tr>`;
     html+=`</table>`;
-    info.innerHTML=html;
+
+    info.innerHTML = html;
 }
 
 async function savePDF() {
@@ -148,7 +178,8 @@ async function savePDF() {
     let balance = 0;
 
     list.forEach(p=>{
-        let debit=0, credit=p.amount;
+        let debit = (p.type==="debit") ? p.amount : 0;
+        let credit = (p.type==="credit") ? p.amount : 0;
         balance += credit - debit;
 
         doc.text(p.date, 14, y);
