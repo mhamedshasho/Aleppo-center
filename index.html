@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>كشف الحساب</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دفعات الحسابات</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="accountsView">
-    <h2>الحسابات</h2>
+    <h2>دفعات الحسابات</h2>
 
     <div class="add-account">
-        <input id="accName" placeholder="اسم الحساب">
-        <button onclick="addAccount()">إضافة حساب</button>
+        <input type="text" id="accountName" placeholder="اسم الحساب">
+        <button class="green" onclick="addAccount()">إضافة حساب</button>
     </div>
 
-    <input placeholder="بحث عن حساب" oninput="searchAccount(this.value)">
-    <div id="cards" class="cards"></div>
-</div>
+    <input type="text" id="searchAccount" placeholder="بحث عن حساب" onkeyup="searchAccounts()">
 
-<div id="accountView" style="display:none">
-    <div class="top-bar">
-        <button onclick="back()">رجوع</button>
-        <h2 id="title"></h2>
-        <button onclick="deleteAccount()">حذف الحساب</button>
+    <div id="accountsView" class="cards"></div>
+
+    <div id="accountDetail" style="display:none;">
+        <div class="top-bar">
+            <button class="red" onclick="backToAccounts()">رجوع</button>
+            <h2 id="accountTitle"></h2>
+            <button class="red" onclick="deleteCurrentAccount()">حذف الحساب</button>
+        </div>
+
+        <div class="actions">
+            <select id="paymentType">
+                <option value="ايجار">ايجار</option>
+                <option value="مصاريف">مصاريف</option>
+                <option value="دفعة أخرى">دفعة أخرى</option>
+            </select>
+            <input type="number" id="paymentAmount" placeholder="المبلغ">
+            <select id="paymentCurrency">
+                <option value="USD">دولار</option>
+                <option value="SYP">سوري</option>
+            </select>
+            <button class="green" onclick="addPayment()">إضافة دفعة</button>
+        </div>
+
+        <input type="text" id="searchPayment" placeholder="بحث في الدفعات" onkeyup="renderCurrentAccount()">
+
+        <div id="info"></div>
     </div>
 
-    <div class="actions">
-        <select id="payType">
-            <option value="credit">له</option>
-            <option value="debit">عليه</option>
-        </select>
-        <button onclick="addPay('SYP')">➕ دفعة سوري</button>
-        <button onclick="addPay('USD')">➕ دفعة دولار</button>
-        <button onclick="savePDF()">💾 حفظ PDF</button>
-    </div>
-
-    <div class="filters">
-        <input placeholder="بحث باسم الدفعة أو المبلغ" oninput="setSearch(this.value)">
-        <input placeholder="شهر (01-12)" oninput="setMonth(this.value)">
-        <input placeholder="سنة (YYYY)" oninput="setYear(this.value)">
-    </div>
-
-    <div id="info"></div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
