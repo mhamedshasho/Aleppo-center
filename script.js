@@ -1,202 +1,147 @@
-let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
-let current = null;
+let accounts = JSON.parse(localStorage.getItem('accounts') || "[]");
+let currentIndex = null;
 
-let filterText="", filterMonth="", filterYear="", accountSearch="";
-
-function save(){ localStorage.setItem("accounts", JSON.stringify(accounts)); }
-function getDate(){ return new Date().toLocaleDateString('ar-EG'); }
-
-function addAccount(){
-    let name = accName.value.trim();
-    if(!name) return alert("ادخل اسم الحساب");
-    accounts.push({ name, payments:[] });
-    accName.value="";
-    save();
-    renderCards();
+function saveAccounts() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    renderAccounts();
 }
 
-function searchAccount(v){ accountSearch=v.trim(); renderCards(); }
+function addAccount() {
+    let name = document.getElementById('accountName').value.trim();
+    if (!name) return alert('ادخل اسم الحساب');
+    if (accounts.find(a => a.name === name)) return alert('هذا الحساب موجود');
 
-function renderCards(){
-    cards.innerHTML="";
-    accounts.filter(a => !accountSearch || a.name.includes(accountSearch))
-    .forEach((a,i)=>{
-        let d=document.createElement("div");
-        d.className="card";
-        d.innerHTML=`<h3>${a.name}</h3><small>اضغط للدخول</small>`;
-        d.onclick=()=>openAccount(i);
-        cards.appendChild(d);
+    accounts.push({ name: name, payments: [] });
+    saveAccounts();
+    document.getElementById('accountName').value = '';
+}
+
+function renderAccounts() {
+    let container = document.getElementById('accountsView');
+    container.innerHTML = '';
+    accounts.forEach((acc, index) => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<h3>${acc.name}</h3><small>${acc.payments.length} دفعة</small>`;
+        card.onclick = () => openAccount(index);
+        container.appendChild(card);
     });
 }
 
-function openAccount(i){
-    current=i;
-    accountsView.style.display="none";
-    accountView.style.display="block";
-    renderAccount();
-}
-
-function back(){ current=null; accountView.style.display="none"; accountsView.style.display="block"; }
-
-function deleteAccount(){
-    if(!confirm("حذف الحساب نهائيًا؟")) return;
-    accounts.splice(current,1);
-    save();
-    back();
-    renderCards();
-}
-
-function addPay(currency){
-    let title = prompt("اسم الدفعة");
-    if(!title) return;
-
-    let amount = Number(prompt("المبلغ"));
-    if(!amount || amount<=0) return;
-
-    let type = document.getElementById("payType").value;
-
-    let date = getDate();
-    accounts[current].payments.push({ title, amount, currency, type, date });
-    save();
-    renderAccount();
-}
-
-function editItem(i){
-    let p = accounts[current].payments[i];
-
-    let title = prompt("اسم الدفعة:", p.title);
-    if(!title) return;
-
-    let amount = Number(prompt("المبلغ:", p.amount));
-    if(!amount || amount<=0) return;
-
-    let type = prompt("نوع الدفعة: له أو عليه", p.type==="credit"?"له":"عليه");
-    type = (type==="له") ? "credit" : "debit";
-
-    let currency = prompt("العملة: SYP أو USD", p.currency);
-    if(currency!=="SYP" && currency!=="USD") currency="SYP";
-
-    p.title = title;
-    p.amount = amount;
-    p.type = type;
-    p.currency = currency;
-
-    save();
-    renderAccount();
-}
-
-function deleteItem(i){
-    if(!confirm("حذف الدفعة؟")) return;
-    accounts[current].payments.splice(i,1);
-    save();
-    renderAccount();
-}
-
-function setSearch(v){filterText=v.trim(); renderAccount();}
-function setMonth(v){filterMonth=v; renderAccount();}
-function setYear(v){filterYear=v; renderAccount();}
-
-function getFilteredPayments(){
-    return accounts[current].payments.filter(p=>{
-        let ok=true;
-        if(filterText){
-            let textMatch=p.title.includes(filterText);
-            let num=Number(filterText);
-            let amountMatch=!isNaN(num) && p.amount===num;
-            if(!textMatch && !amountMatch) ok=false;
-        }
-        let parts=p.date.split("/");
-        let month=parts[1], year=parts[2]||parts[0];
-        if(filterMonth && month!==filterMonth) ok=false;
-        if(filterYear && year!==filterYear) ok=false;
-        return ok;
+function searchAccounts() {
+    let query = document.getElementById('searchAccount').value.toLowerCase();
+    let filtered = accounts.filter(a => a.name.toLowerCase().includes(query));
+    let container = document.getElementById('accountsView');
+    container.innerHTML = '';
+    filtered.forEach((acc, index) => {
+        let card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<h3>${acc.name}</h3><small>${acc.payments.length} دفعة</small>`;
+        card.onclick = () => openAccount(accounts.indexOf(acc));
+        container.appendChild(card);
     });
 }
 
-function renderAccount(){
-    let acc = accounts[current];
-    title.innerText = acc.name;
+function openAccount(index) {
+    currentIndex = index;
+    document.getElementById('accountsView').style.display = 'none';
+    document.getElementById('accountDetail').style.display = 'block';
+    document.getElementById('accountTitle').innerText = accounts[index].name;
+    renderCurrentAccount();
+}
 
-    let list = getFilteredPayments();
-    let html = `<table>
-        <tr><th>التاريخ</th><th>التفاصيل</th><th>عليه</th><th>له</th><th>الرصيد</th><th>إجراءات</th></tr>`;
+function backToAccounts() {
+    document.getElementById('accountDetail').style.display = 'none';
+    document.getElementById('accountsView').style.display = 'grid';
+    currentIndex = null;
+}
 
-    let balance = 0;
-    list.forEach((p,i)=>{
-        let debit = (p.type==="debit") ? p.amount : 0;
-        let credit = (p.type==="credit") ? p.amount : 0;
-        balance += credit - debit;
+function addPayment() {
+    let amount = parseFloat(document.getElementById('paymentAmount').value);
+    if (isNaN(amount) || amount <= 0) return alert('ادخل مبلغ صحيح');
+    let type = document.getElementById('paymentType').value;
+    let currency = document.getElementById('paymentCurrency').value;
+    let date = new Date().toLocaleDateString('ar-EG');
 
-        html+=`<tr>
+    accounts[currentIndex].payments.push({ amount, type, currency, date });
+    saveAccounts();
+    document.getElementById('paymentAmount').value = '';
+    renderCurrentAccount();
+}
+
+function deletePayment(paymentIndex) {
+    if (!confirm('هل تريد حذف هذه الدفعة؟')) return;
+    accounts[currentIndex].payments.splice(paymentIndex, 1);
+    saveAccounts();
+    renderCurrentAccount();
+}
+
+function editPayment(paymentIndex) {
+    let p = accounts[currentIndex].payments[paymentIndex];
+    let newAmount = parseFloat(prompt('المبلغ الجديد:', p.amount));
+    if (isNaN(newAmount) || newAmount <= 0) return;
+    let newType = prompt('نوع الدفعة:', p.type);
+    let newCurrency = prompt('العملة (USD/SYP):', p.currency);
+    p.amount = newAmount;
+    p.type = newType;
+    p.currency = newCurrency;
+    saveAccounts();
+    renderCurrentAccount();
+}
+
+function deleteCurrentAccount() {
+    if (!confirm('هل تريد حذف الحساب بالكامل؟')) return;
+    accounts.splice(currentIndex, 1);
+    saveAccounts();
+    backToAccounts();
+}
+
+function renderCurrentAccount() {
+    let acc = accounts[currentIndex];
+    let filter = document.getElementById('searchPayment').value.toLowerCase();
+    let payments = acc.payments.filter(p => 
+        p.type.toLowerCase().includes(filter) || p.amount.toString().includes(filter)
+    );
+
+    let table = `<table>
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>المبلغ</th>
+                <th>العملة</th>
+                <th>نوع الدفعة</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    let totalUSD = 0;
+    let totalSYP = 0;
+
+    payments.forEach((p, i) => {
+        table += `<tr>
             <td>${p.date}</td>
-            <td>${p.title}</td>
-            <td class="amount-negative">${debit}</td>
-            <td class="amount-positive">${credit}</td>
-            <td>${balance}</td>
+            <td>${p.amount}</td>
+            <td>${p.currency}</td>
+            <td>${p.type}</td>
             <td>
-                <button onclick="editItem(${i})">✏️ تعديل</button>
-                <button onclick="deleteItem(${i})">🗑️ حذف</button>
+                <button onclick="editPayment(${i})">تعديل</button>
+                <button onclick="deletePayment(${i})">حذف</button>
             </td>
         </tr>`;
+        if (p.currency === "USD") totalUSD += p.amount;
+        if (p.currency === "SYP") totalSYP += p.amount;
     });
 
-    let totalSYP = list.filter(p=>p.currency==="SYP").reduce((a,b)=>a+b.amount,0);
-    let totalUSD = list.filter(p=>p.currency==="USD").reduce((a,b)=>a+b.amount,0);
-
-    html+=`<tr class="total">
-        <td colspan="2">إجمالي العمليات</td>
-        <td>-</td>
-        <td>${totalSYP} سوري / ${totalUSD} دولار</td>
-        <td>-</td>
-        <td>-</td>
+    table += `<tr class="total">
+        <td colspan="1">المجموع الكلي</td>
+        <td>${totalUSD + totalSYP}</td>
+        <td>USD: ${totalUSD} | SYP: ${totalSYP}</td>
+        <td colspan="2"></td>
     </tr>`;
-    html+=`</table>`;
 
-    info.innerHTML = html;
+    table += `</tbody></table>`;
+    document.getElementById('info').innerHTML = table;
 }
 
-async function savePDF() {
-    if(current===null) return;
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: "landscape" });
-
-    let acc = accounts[current];
-    let list = getFilteredPayments();
-
-    doc.setFontSize(16);
-    doc.text(`كشف حساب: ${acc.name}`, 14, 20);
-
-    let startY = 30;
-    doc.setFontSize(12);
-    doc.text("التاريخ", 14, startY);
-    doc.text("التفاصيل", 50, startY);
-    doc.text("عليه", 120, startY);
-    doc.text("له", 150, startY);
-    doc.text("الرصيد", 180, startY);
-
-    let y = startY + 8;
-    let balance = 0;
-
-    list.forEach(p=>{
-        let debit = (p.type==="debit") ? p.amount : 0;
-        let credit = (p.type==="credit") ? p.amount : 0;
-        balance += credit - debit;
-
-        doc.text(p.date, 14, y);
-        doc.text(p.title, 50, y);
-        doc.text(debit.toString(), 120, y);
-        doc.text(credit.toString(), 150, y);
-        doc.text(balance.toString(), 180, y);
-        y+=8;
-    });
-
-    let totalSYP = list.filter(p=>p.currency==="SYP").reduce((a,b)=>a+b.amount,0);
-    let totalUSD = list.filter(p=>p.currency==="USD").reduce((a,b)=>a+b.amount,0);
-    y+=4;
-    doc.text(`إجمالي العمليات: ${totalSYP} سوري / ${totalUSD} دولار`, 14, y);
-
-    doc.save(`${acc.name}.pdf`);
-}
-
-/* تشغيل */
-renderCards();
+renderAccounts();
