@@ -3,15 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحسابات</title>
+<title>كشف الحساب</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
 
-<!-- ===== شاشة الحسابات ===== -->
 <div id="accountsView">
-
     <h2>الحسابات</h2>
 
     <div class="add-account">
@@ -19,13 +17,11 @@
         <button onclick="addAccount()">إضافة حساب</button>
     </div>
 
+    <input placeholder="بحث عن حساب" oninput="searchAccount(this.value)">
     <div id="cards" class="cards"></div>
-
 </div>
 
-<!-- ===== شاشة حساب واحد ===== -->
 <div id="accountView" style="display:none">
-
     <div class="top-bar">
         <button onclick="back()">رجوع</button>
         <h2 id="title"></h2>
@@ -35,16 +31,16 @@
     <div class="actions">
         <button onclick="addPay('SYP')">➕ دفعة سوري</button>
         <button onclick="addPay('USD')">➕ دفعة دولار</button>
+        <button onclick="savePDF()">💾 حفظ PDF</button>
     </div>
 
     <div class="filters">
-        <input placeholder="بحث باسم الدفعة" oninput="setSearch(this.value)">
+        <input placeholder="بحث باسم الدفعة أو المبلغ" oninput="setSearch(this.value)">
         <input placeholder="شهر (01-12)" oninput="setMonth(this.value)">
-        <input placeholder="سنة (2026)" oninput="setYear(this.value)">
+        <input placeholder="سنة (YYYY)" oninput="setYear(this.value)">
     </div>
 
     <div id="info"></div>
-
 </div>
 
 <script src="script.js"></script>
