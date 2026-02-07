@@ -14,124 +14,65 @@ body{
     margin:0;
     padding:0;
     color:var(--text);
+    font-size:16px; /* زاد حجم الخط قليلاً */
 }
 
-h2{text-align:center;margin:15px 0;font-weight:700;}
+h2{text-align:center;margin:20px 0;font-weight:700; font-size:22px;} /* تكبير العنوان */
 
-/* إضافة حساب */
 .add-account{
-    display:flex; gap:8px; padding:10px;
+    display:flex; gap:10px; padding:15px;
 }
 .add-account input{
-    flex:1; padding:12px; border-radius:12px; border:1px solid var(--border);
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    flex:1; padding:14px; border-radius:14px; border:1px solid var(--border);
     font-size:16px;
 }
 .add-account button{
-    padding:12px 18px; border-radius:12px; border:none; font-weight:600; font-size:16px; cursor:pointer;
-    box-shadow:0 4px 8px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
-    background: linear-gradient(145deg, #1e7b4f, #38a169);
-    color:#fff;
-}
-.add-account button:hover{
-    transform: translateY(-2px);
-    box-shadow:0 6px 12px rgba(0,0,0,0.2);
+    padding:14px 20px; border-radius:14px; font-weight:600; font-size:16px;
 }
 
-/* بحث الحساب */
+/* البحث */
 #accountsView input[placeholder*="بحث"]{
-    margin:10px; padding:12px; border-radius:12px; border:1px solid var(--border);
-    width:calc(100% - 20px); box-shadow:0 2px 5px rgba(0,0,0,0.05);
-    font-size:16px;
+    margin:12px; padding:14px; border-radius:14px; border:1px solid var(--border);
+    width:calc(100% - 24px); font-size:16px;
 }
 
 /* بطاقات الحسابات */
 .cards{
-    display:grid; grid-template-columns:1fr; gap:16px; padding:10px;
+    display:grid; grid-template-columns:1fr; gap:20px; padding:12px;
 }
 .card{
-    background:var(--card); padding:22px; border-radius:18px;
-    box-shadow:0 6px 15px rgba(0,0,0,0.08); cursor:pointer;
-    transition:transform .15s, box-shadow .15s;
-}
-.card:hover{
-    transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.12);
-}
-.card h3{margin:0 0 10px; font-weight:700; font-size:18px;}
-.card small{color:#666;font-size:14px;}
-
-/* شريط الحساب */
-.top-bar{
-    display:flex; justify-content:space-between; align-items:center; padding:12px 18px; background:#fff;
-    box-shadow:0 3px 10px rgba(0,0,0,0.05); border-radius:12px; margin:10px;
-}
-.top-bar button{
-    border:none; padding:10px 14px; border-radius:12px; font-size:15px; font-weight:600;
-    cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.15); transition:0.2s;
-    background: linear-gradient(145deg, #8b1e1e, #e53e3e);
-    color:#fff;
-}
-.top-bar button:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 12px rgba(0,0,0,0.2);
-}
-.top-bar h2{flex:1; text-align:center; margin:0; font-weight:700; font-size:18px;}
-
-/* أزرار العمليات */
-.actions{
-    display:flex; gap:12px; padding:10px 18px;
-}
-.actions select, .actions button{
-    padding:12px; border-radius:12px; border:none; font-weight:600; cursor:pointer; font-size:15px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
-}
-.actions select{flex:1; border:1px solid var(--border);}
-.actions button.green{background: linear-gradient(145deg, #1e7b4f, #38a169); color:#fff;}
-.actions button.blue{background: linear-gradient(145deg, #0b5ea6, #3182ce); color:#fff;}
-.actions button.red{background: linear-gradient(145deg, #8b1e1e, #e53e3e); color:#fff;}
-.actions button:hover{transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.2);}
-
-/* فلاتر البحث */
-.filters{
-    display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; padding:10px 18px;
-}
-.filters input{
-    padding:12px; border-radius:12px; border:1px solid var(--border);
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
-    font-size:15px;
+    background:var(--card); padding:26px; border-radius:20px;
+    font-size:18px; /* تكبير النصوص */
 }
 
-/* الجدول */
-#info{padding:10px; overflow-x:auto;}
+/* جدول الحساب */
+#info{padding:12px; overflow-x:auto; width:100%;}
 table{
-    width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
-    box-shadow:0 6px 15px rgba(0,0,0,0.05); font-size:16px;
+    width:100%; border-collapse:collapse; font-size:16px; min-width:700px; /* أكبر قليلاً */
 }
-th, td{border:1px solid var(--border); padding:14px; text-align:center;}
+th, td{
+    border:1px solid var(--border); padding:16px; text-align:center;
+}
 th{
-    background:var(--blue); color:#fff; font-weight:700; font-size:16px;
+    background:var(--blue); color:#fff; font-weight:700; font-size:17px;
 }
-td.amount-positive{color:var(--green); font-weight:700;}
-td.amount-negative{color:var(--red); font-weight:700;}
-tr.total{background:#eee; font-weight:bold;}
-
-/* أزرار داخل الجدول */
+td{
+    font-size:16px;
+}
 td button{
-    padding:6px 12px; margin:0 3px; border:none; border-radius:10px; cursor:pointer;
-    box-shadow:0 3px 6px rgba(0,0,0,0.15); font-size:14px; transition:0.2s;
+    padding:8px 14px; font-size:15px; border-radius:10px;
 }
-td button:nth-child(1){background: linear-gradient(145deg,#0b5ea6,#3182ce); color:#fff;} /* تعديل */
-td button:nth-child(2){background: linear-gradient(145deg,#8b1e1e,#e53e3e); color:#fff;} /* حذف */
-td button:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+
+/* المجموع الكلي */
+tr.total td{
+    font-weight:bold; font-size:17px;
 }
 
 /* استجابة الهاتف */
 @media(max-width:480px){
     .filters{grid-template-columns:1fr;}
     .actions{flex-direction:column;}
-    th, td{font-size:14px; padding:10px;}
-    .add-account input, .add-account button{font-size:14px; padding:10px;}
+    th, td{font-size:14px; padding:12px;}
+    .add-account input, .add-account button{font-size:15px; padding:12px;}
+    #info table{min-width:100%;}
 }
