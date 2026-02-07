@@ -5,60 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aleppo Center</title>
 <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
 </head>
 <body>
-<h1>Aleppo Center - دفتر الحسابات</h1>
 
-<div id="mainView">
-    <div class="add-account-section">
-        <input type="text" id="accountName" placeholder="اسم الحساب">
-        <input type="number" id="accountDebt" placeholder="ديون أولية">
-        <select id="accountCurrency">
-            <option value="SYP">سوري</option>
-            <option value="USD">دولار</option>
-        </select>
-        <button onclick="addAccount()">إضافة حساب</button>
-    </div>
-    <div id="accountsList"></div>
+<h1>Aleppo Center</h1>
+
+<div class="container">
+
+<div id="accountsView">
+    <input id="accName" placeholder="اسم الحساب">
+    <input id="accAmount" type="number" placeholder="دين ابتدائي">
+    <select id="accCurrency">
+        <option value="SYP">سوري</option>
+        <option value="USD">دولار</option>
+    </select>
+    <button class="btn-green" onclick="addAccount()">إضافة حساب</button>
+    <div id="cards"></div>
 </div>
 
-<div id="accountDetail" style="display:none;">
-    <button id="backBtn" onclick="backToMain()">رجوع</button>
-    <h2 id="accName"></h2>
-    <div class="add-section">
-        <button onclick="addPaymentSelected('SYP')">إضافة دفعة بالسوري</button>
-        <button onclick="addPaymentSelected('USD')">إضافة دفعة بالدولار</button>
-        <button onclick="addDebtSelected('SYP')">إضافة دين بالسوري</button>
-        <button onclick="addDebtSelected('USD')">إضافة دين بالدولار</button>
-        <button onclick="savePDFSelected()">حفظ PDF</button>
-        <button onclick="deleteCurrentAccount()">حذف الحساب</button>
-    </div>
-    <table id="accTable">
-        <thead>
-            <tr>
-                <th>نوع</th>
-                <th>العملة</th>
-                <th>المبلغ</th>
-                <th>التاريخ</th>
-                <th>حذف</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <div class="totals">
-        <span id="totalSYP">مجموع بالسوري: 0</span><br>
-        <span id="totalUSD">مجموع بالدولار: 0</span><br>
-        <span id="remainSYP">الباقي بالسوري: 0</span><br>
-        <span id="remainUSD">الباقي بالدولار: 0</span>
-    </div>
+<div id="accountView" style="display:none">
+    <button class="btn-gray" onclick="back()">رجوع</button>
+    <h2 id="title"></h2>
+
+    <button class="btn-red" onclick="addDebt('SYP')">إضافة دين سوري</button>
+    <button class="btn-red" onclick="addDebt('USD')">إضافة دين دولار</button>
+    <button class="btn-green" onclick="addPay('SYP')">إضافة دفعة سوري</button>
+    <button class="btn-green" onclick="addPay('USD')">إضافة دفعة دولار</button>
+    <button class="btn-red" onclick="deleteAccount()">حذف الحساب</button>
+
+    <div id="info" class="row"></div>
+</div>
+
 </div>
 
 <script src="script.js"></script>
-<script>
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').then(()=>console.log('Service Worker Registered'));
-}
-</script>
 </body>
 </html>
