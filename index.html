@@ -3,38 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aleppo Center</title>
+<title>الحسابات</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>Aleppo Center</h1>
-
-<div class="container">
-
+<!-- ===== شاشة الحسابات ===== -->
 <div id="accountsView">
-    <input id="accName" placeholder="اسم الحساب">
-    <input id="accAmount" type="number" placeholder="دين ابتدائي">
-    <select id="accCurrency">
-        <option value="SYP">سوري</option>
-        <option value="USD">دولار</option>
-    </select>
-    <button class="btn-green" onclick="addAccount()">إضافة حساب</button>
-    <div id="cards"></div>
+
+    <h2>الحسابات</h2>
+
+    <div class="add-account">
+        <input id="accName" placeholder="اسم الحساب">
+        <button onclick="addAccount()">إضافة حساب</button>
+    </div>
+
+    <div id="cards" class="cards"></div>
+
 </div>
 
+<!-- ===== شاشة حساب واحد ===== -->
 <div id="accountView" style="display:none">
-    <button class="btn-gray" onclick="back()">رجوع</button>
-    <h2 id="title"></h2>
 
-    <button class="btn-red" onclick="addDebt('SYP')">إضافة دين سوري</button>
-    <button class="btn-red" onclick="addDebt('USD')">إضافة دين دولار</button>
-    <button class="btn-green" onclick="addPay('SYP')">إضافة دفعة سوري</button>
-    <button class="btn-green" onclick="addPay('USD')">إضافة دفعة دولار</button>
-    <button class="btn-red" onclick="deleteAccount()">حذف الحساب</button>
+    <div class="top-bar">
+        <button onclick="back()">رجوع</button>
+        <h2 id="title"></h2>
+        <button onclick="deleteAccount()">حذف الحساب</button>
+    </div>
 
-    <div id="info" class="row"></div>
-</div>
+    <div class="actions">
+        <button onclick="addPay('SYP')">➕ دفعة سوري</button>
+        <button onclick="addPay('USD')">➕ دفعة دولار</button>
+    </div>
+
+    <div class="filters">
+        <input placeholder="بحث باسم الدفعة" oninput="setSearch(this.value)">
+        <input placeholder="شهر (01-12)" oninput="setMonth(this.value)">
+        <input placeholder="سنة (2026)" oninput="setYear(this.value)">
+    </div>
+
+    <div id="info"></div>
 
 </div>
 
