@@ -1,76 +1,68 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f7f7f7;
-    margin: 0;
-    padding: 10px;
+:root{
+    --red:#7a1c1c;
+    --green:#1f6f43;
+    --gray:#555;
+    --bg:#f4f4f4;
 }
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:var(--bg);
 }
-#mainView, #accountDetail {
-    max-width: 500px;
-    margin: auto;
+
+h1,h2{text-align:center}
+
+.container{
+    max-width:480px;
+    margin:auto;
+    padding:10px;
 }
-.account, #accountDetail {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+.card{
+    background:#fff;
+    border-radius:14px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+    cursor:pointer;
 }
-.account-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+button{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    font-size:15px;
+    margin-top:6px;
+    cursor:pointer;
 }
-.account-header span {
-    font-weight: bold;
-    cursor: pointer;
+
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-gray{background:var(--gray);color:#fff}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    border-radius:10px;
+    border:1px solid #ccc;
 }
-.account-header button {
-    background: #e74c3c;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
+
+.row{
+    margin-top:10px;
+    border-top:1px solid #ddd;
+    padding-top:10px;
 }
-.add-section button, .add-account-section button {
-    margin: 5px;
-    padding: 7px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #3498db;
-    color: #fff;
+
+.log{
+    background:#fafafa;
+    padding:8px;
+    border-radius:8px;
+    margin-top:6px;
+    font-size:14px;
 }
-#backBtn {
-    background: #95a5a6;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 5px;
-    text-align: center;
-}
-th {
-    background: #ddd;
-}
-input, select {
-    padding: 5px;
-    margin: 2px;
-}
-.totals {
-    margin-top: 10px;
-}
+
+.log.debt{border-right:5px solid var(--red)}
+.log.pay{border-right:5px solid var(--green)}
