@@ -1,7 +1,8 @@
 :root{
     --red:#8b1e1e;
     --green:#1e7b4f;
-    --bg:#f4f4f4;
+    --blue:#0b5ea6;
+    --bg:#f0f2f5;
     --card:#fff;
     --border:#ccc;
     --text:#222;
@@ -9,48 +10,96 @@
 
 body{
     background:var(--bg);
-    font-family:system-ui, Arial, sans-serif;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin:0;
     padding:0;
     color:var(--text);
 }
 
-h2{text-align:center;margin:10px 0;}
+h2{text-align:center;margin:15px 0;font-weight:700;}
 
 .add-account{
     display:flex; gap:8px; padding:10px;
 }
-.add-account input{flex:1; padding:10px; border-radius:8px; border:1px solid var(--border);}
-.add-account button{padding:10px 14px; border-radius:8px; border:none; background:var(--green); color:#fff; cursor:pointer;}
+.add-account input{
+    flex:1; padding:10px; border-radius:10px; border:1px solid var(--border);
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
+.add-account button{
+    padding:10px 16px; border-radius:10px; border:none; background:var(--green); color:#fff; font-weight:bold;
+    cursor:pointer; transition:0.2s;
+}
+.add-account button:hover{opacity:0.85;}
 
-#accountsView input[placeholder*="بحث"]{margin:10px; padding:8px; border-radius:8px; border:1px solid var(--border);}
+#accountsView input[placeholder*="بحث"]{
+    margin:10px; padding:10px; border-radius:10px; border:1px solid var(--border);
+    width:calc(100% - 20px); box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
 
-.cards{display:grid; grid-template-columns:1fr; gap:12px; padding:10px;}
-.card{background:var(--card); padding:16px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,.08); cursor:pointer; transition:transform .1s;}
-.card:hover{transform:scale(1.02);}
-.card h3{margin:0 0 6px;}
+.cards{
+    display:grid; grid-template-columns:1fr; gap:14px; padding:10px;
+}
+.card{
+    background:var(--card); padding:20px; border-radius:15px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08); cursor:pointer;
+    transition:transform .15s, box-shadow .15s;
+}
+.card:hover{transform:translateY(-2px); box-shadow:0 6px 15px rgba(0,0,0,0.12);}
+.card h3{margin:0 0 8px; font-weight:600;}
 .card small{color:#666;}
 
-.top-bar{display:flex; justify-content:space-between; align-items:center; padding:10px; gap:6px;}
-.top-bar button{border:none; padding:8px 10px; border-radius:8px; background:var(--red); color:#fff; cursor:pointer;}
-.top-bar h2{flex:1; text-align:center; margin:0;}
+.top-bar{
+    display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05); border-radius:10px; margin:10px;
+}
+.top-bar button{
+    border:none; padding:8px 12px; border-radius:8px; background:var(--red); color:#fff; cursor:pointer;
+    transition:0.2s;
+}
+.top-bar button:hover{opacity:0.85;}
+.top-bar h2{flex:1; text-align:center; margin:0; font-weight:600;}
 
-.actions{display:flex; gap:10px; padding:10px;}
-.actions button{flex:1; padding:12px; border-radius:10px; border:none; color:#fff; font-weight:bold; cursor:pointer;}
-.actions button:nth-child(1){background:var(--green);}
-.actions button:nth-child(2){background:#0b5ea6;}
-.actions button:nth-child(3){background:var(--red);}
+.actions{
+    display:flex; gap:10px; padding:10px 15px;
+}
+.actions select, .actions button{
+    padding:10px; border-radius:10px; border:none; font-weight:600; cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.actions select{flex:1; border:1px solid var(--border);}
+.actions button:nth-child(2){background:var(--green); color:#fff; flex:1;}
+.actions button:nth-child(3){background:var(--blue); color:#fff; flex:1;}
+.actions button:nth-child(4){background:var(--red); color:#fff; flex:1;}
+.actions button:hover{opacity:0.85;}
 
-.filters{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding:10px;}
-.filters input{padding:8px; border-radius:8px; border:1px solid var(--border);}
+.filters{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:10px 15px;
+}
+.filters input{
+    padding:10px; border-radius:10px; border:1px solid var(--border);
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
 
 #info{padding:10px; overflow-x:auto;}
-table{width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;}
-th, td{border:1px solid var(--border); padding:8px; text-align:center;}
-th{background:var(--green); color:#fff;}
-td.amount-positive{color:var(--green);}
-td.amount-negative{color:var(--red);}
+table{
+    width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+th, td{border:1px solid var(--border); padding:10px; text-align:center;}
+th{
+    background:var(--blue); color:#fff; font-weight:600;
+}
+td.amount-positive{color:var(--green); font-weight:600;}
+td.amount-negative{color:var(--red); font-weight:600;}
 tr.total{background:#eee; font-weight:bold;}
+td button{
+    padding:4px 8px; margin:0 2px; border:none; border-radius:6px; cursor:pointer;
+    transition:0.2s;
+}
+td button:hover{opacity:0.85;}
+td button:nth-child(1){background:var(--blue); color:#fff;} /* تعديل */
+td button:nth-child(2){background:var(--red); color:#fff;} /* حذف */
+
 @media(max-width:480px){
     .filters{grid-template-columns:1fr;}
     .actions{flex-direction:column;}
