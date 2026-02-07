@@ -24,7 +24,6 @@ function addAccount(){
     if(!name) return alert("ادخل اسم الحساب");
 
     accounts.push({ name, payments:[] });
-
     accName.value="";
     save();
     renderCards();
@@ -75,8 +74,8 @@ function addPay(currency){
     if(!amount || amount<=0) return;
 
     let date = getDate();
-
     accounts[current].payments.push({ title, amount, currency, date });
+
     save();
     renderAccount();
 }
@@ -104,7 +103,7 @@ function deleteItem(i){
     renderAccount();
 }
 
-/* ===== فلترة ===== */
+/* ===== البحث والفلترة ===== */
 function setSearch(v){
     filterText = v.trim();
     renderAccount();
@@ -118,6 +117,30 @@ function setYear(v){
     renderAccount();
 }
 
+/* ===== فلترة ذكية ===== */
+function getFilteredPayments(){
+    return accounts[current].payments.filter(p=>{
+        let ok = true;
+
+        // 🔍 بحث ذكي (اسم أو مبلغ)
+        if(filterText){
+            let textMatch = p.title.includes(filterText);
+            let num = Number(filterText);
+            let amountMatch = !isNaN(num) && p.amount === num;
+            if(!textMatch && !amountMatch) ok=false;
+        }
+
+        let parts = p.date.split("/");
+        let month = parts[1];
+        let year = parts[0];
+
+        if(filterMonth && month !== filterMonth) ok=false;
+        if(filterYear && year !== filterYear) ok=false;
+
+        return ok;
+    });
+}
+
 /* ===== حساب المجاميع ===== */
 function calculateTotals(list){
     let syp=0, usd=0;
@@ -126,24 +149,6 @@ function calculateTotals(list){
         if(p.currency==="USD") usd+=p.amount;
     });
     return {syp, usd, count:list.length};
-}
-
-/* ===== فلترة الدفعات ===== */
-function getFilteredPayments(){
-    return accounts[current].payments.filter(p=>{
-        let ok = true;
-
-        if(filterText && !p.title.includes(filterText)) ok=false;
-
-        let parts = p.date.split("/");
-        let m = parts[1];
-        let y = parts[0];
-
-        if(filterMonth && m !== filterMonth) ok=false;
-        if(filterYear && y !== filterYear) ok=false;
-
-        return ok;
-    });
 }
 
 /* ===== عرض الحساب ===== */
@@ -155,15 +160,10 @@ function renderAccount(){
     let t = calculateTotals(list);
 
     let html = `
-    <b>المجاميع (حسب الفلترة)</b><br>
+    <b>المجاميع (حسب البحث)</b><br>
     مجموع سوري: ${t.syp}<br>
     مجموع دولار: ${t.usd}<br>
     عدد العناصر: ${t.count}
-    <hr>
-
-    <input placeholder="بحث باسم الدفعة" oninput="setSearch(this.value)">
-    <input placeholder="شهر (01-12)" oninput="setMonth(this.value)">
-    <input placeholder="سنة (2026)" oninput="setYear(this.value)">
     <hr>
     `;
 
