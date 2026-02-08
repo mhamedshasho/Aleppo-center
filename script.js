@@ -1,158 +1,61 @@
-let accounts = JSON.parse(localStorage.getItem('accounts') || "[]");
-let currentIndex = null;
+let payments = [];
+let balance = 0;
 
-// حفظ الحسابات
-function saveAccounts() {
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    renderAccounts();
-}
-
-// إضافة حساب جديد
-function addAccount() {
-    let name = document.getElementById('accountName').value.trim();
-    if (!name) return alert('ادخل اسم الحساب');
-    if (accounts.find(a => a.name === name)) return alert('هذا الحساب موجود');
-
-    accounts.push({ name: name, payments: [] });
-    saveAccounts();
-    document.getElementById('accountName').value = '';
-}
-
-// عرض كل الحسابات كبطاقات
-function renderAccounts() {
-    let container = document.getElementById('accountsView');
-    container.innerHTML = '';
-    accounts.forEach((acc, index) => {
-        let card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<h3>${acc.name}</h3><small>${acc.payments.length} دفعة</small>`;
-        card.onclick = () => openAccount(index); // عند الضغط على الحساب
-        container.appendChild(card);
-    });
-}
-
-// بحث عن حساب
-function searchAccounts() {
-    let query = document.getElementById('searchAccount').value.toLowerCase();
-    let filtered = accounts.filter(a => a.name.toLowerCase().includes(query));
-    let container = document.getElementById('accountsView');
-    container.innerHTML = '';
-    filtered.forEach((acc, index) => {
-        let card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<h3>${acc.name}</h3><small>${acc.payments.length} دفعة</small>`;
-        card.onclick = () => openAccount(accounts.indexOf(acc));
-        container.appendChild(card);
-    });
-}
-
-// فتح الحساب المختار
-function openAccount(index) {
-    currentIndex = index;
-    document.getElementById('accountsView').style.display = 'none';
-    document.getElementById('accountDetail').style.display = 'block';
-    document.getElementById('accountTitle').innerText = accounts[index].name;
-    renderCurrentAccount();
-}
-
-// العودة إلى جميع الحسابات
-function backToAccounts() {
-    document.getElementById('accountDetail').style.display = 'none';
-    document.getElementById('accountsView').style.display = 'grid';
-    currentIndex = null;
-}
-
-// إضافة دفعة جديدة
 function addPayment() {
-    let amount = parseFloat(document.getElementById('paymentAmount').value);
-    if (isNaN(amount) || amount <= 0) return alert('ادخل مبلغ صحيح');
-    let type = document.getElementById('paymentType').value;
-    let currency = document.getElementById('paymentCurrency').value;
-    let date = new Date().toLocaleDateString('ar-EG');
+    const date = date.value;
+    const details = document.getElementById("details").value;
+    const amount = Number(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
+    const currency = document.getElementById("currency").value;
 
-    accounts[currentIndex].payments.push({ amount, type, currency, date });
-    saveAccounts();
-    document.getElementById('paymentAmount').value = '';
-    renderCurrentAccount();
+    if (!date || !amount) return alert("أدخل البيانات");
+
+    payments.push({ date, details, amount, type, currency });
+    renderTable();
 }
 
-// حذف دفعة
-function deletePayment(paymentIndex) {
-    if (!confirm('هل تريد حذف هذه الدفعة؟')) return;
-    accounts[currentIndex].payments.splice(paymentIndex, 1);
-    saveAccounts();
-    renderCurrentAccount();
+function deletePayment(index) {
+    payments.splice(index, 1);
+    renderTable();
 }
 
-// تعديل دفعة
-function editPayment(paymentIndex) {
-    let p = accounts[currentIndex].payments[paymentIndex];
-    let newAmount = parseFloat(prompt('المبلغ الجديد:', p.amount));
-    if (isNaN(newAmount) || newAmount <= 0) return;
-    let newType = prompt('نوع الدفعة:', p.type);
-    let newCurrency = prompt('العملة (USD/SYP):', p.currency);
-    p.amount = newAmount;
-    p.type = newType;
-    p.currency = newCurrency;
-    saveAccounts();
-    renderCurrentAccount();
-}
+function renderTable() {
+    const body = document.getElementById("tableBody");
+    body.innerHTML = "";
 
-// حذف الحساب بالكامل
-function deleteCurrentAccount() {
-    if (!confirm('هل تريد حذف الحساب بالكامل؟')) return;
-    accounts.splice(currentIndex, 1);
-    saveAccounts();
-    backToAccounts();
-}
-
-// عرض الدفعات في جدول مع المجموع الكلي لكل عملة
-function renderCurrentAccount() {
-    let acc = accounts[currentIndex];
-    let filter = document.getElementById('searchPayment').value.toLowerCase();
-    let payments = acc.payments.filter(p => 
-        p.type.toLowerCase().includes(filter) || p.amount.toString().includes(filter)
-    );
-
-    let table = `<table>
-        <thead>
-            <tr>
-                <th>التاريخ</th>
-                <th>المبلغ</th>
-                <th>العملة</th>
-                <th>نوع الدفعة</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-    let totalUSD = 0;
-    let totalSYP = 0;
+    let totalDebit = 0;
+    let totalCredit = 0;
+    balance = 0;
 
     payments.forEach((p, i) => {
-        table += `<tr>
-            <td>${p.date}</td>
-            <td>${p.amount}</td>
-            <td>${p.currency}</td>
-            <td>${p.type}</td>
-            <td>
-                <button onclick="editPayment(${i})">تعديل</button>
-                <button onclick="deletePayment(${i})">حذف</button>
-            </td>
-        </tr>`;
-        if (p.currency === "USD") totalUSD += p.amount;
-        if (p.currency === "SYP") totalSYP += p.amount;
+        let debit = 0;
+        let credit = 0;
+
+        if (p.type === "debit") {
+            debit = p.amount;
+            balance += p.amount;
+            totalDebit += p.amount;
+        } else {
+            credit = p.amount;
+            balance -= p.amount;
+            totalCredit += p.amount;
+        }
+
+        const row = `
+            <tr>
+                <td>${p.date}</td>
+                <td>${p.details}</td>
+                <td>${debit || ""}</td>
+                <td>${credit || ""}</td>
+                <td>${balance}</td>
+                <td><button class="delete-btn" onclick="deletePayment(${i})">✕</button></td>
+            </tr>
+        `;
+        body.innerHTML += row;
     });
 
-    table += `<tr class="total">
-        <td colspan="1">المجموع الكلي</td>
-        <td>${totalUSD + totalSYP}</td>
-        <td>USD: ${totalUSD} | SYP: ${totalSYP}</td>
-        <td colspan="2"></td>
-    </tr>`;
-
-    table += `</tbody></table>`;
-    document.getElementById('info').innerHTML = table;
+    document.getElementById("totalDebit").innerText = totalDebit;
+    document.getElementById("totalCredit").innerText = totalCredit;
+    document.getElementById("finalBalance").innerText =
+        "الرصيد الإجمالي: " + balance;
 }
-
-renderAccounts();
