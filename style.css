@@ -1,84 +1,111 @@
+* {
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+}
+
 body {
-    background: #f2f2f2;
-    font-family: Tahoma;
-    margin: 0;
-    padding: 20px;
+  margin: 0;
+  background: #f4f6f8;
 }
 
-.container {
-    max-width: 1400px;
-    margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
+.app {
+  max-width: 1400px;
+  margin: auto;
+  padding: 30px;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 25px;
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
 }
 
-.header h2 {
-    color: #1d4ed8;
-    margin-bottom: 5px;
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-.header h3 {
-    margin: 5px 0;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 15px;
 }
 
-.add-box {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+input, select {
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
-.add-box input,
-.add-box select,
-.add-box button {
-    padding: 10px;
-    font-size: 15px;
+button {
+  background: linear-gradient(135deg,#ff8c42,#ff6a00);
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
-.add-box button {
-    background: #16a34a;
-    color: white;
-    border: none;
-    cursor: pointer;
+button:hover {
+  opacity: 0.9;
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 14px;
+  overflow-x: auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
 }
 
-th {
-    background: #d1d5db;
-    padding: 12px;
+th, td {
+  padding: 18px;
+  text-align: center;
+  font-size: 16px;
 }
 
-td {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    text-align: center;
+thead {
+  background: #ff8c42;
+  color: white;
 }
 
-.total-row td {
-    background: #e5e7eb;
-    font-weight: bold;
+tr:nth-child(even) {
+  background: #f9f9f9;
 }
 
-.balance-row td {
-    background: #fca5a5;
-    font-weight: bold;
-    font-size: 18px;
+.action-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin: 2px;
 }
 
-.delete-btn {
-    background: #dc2626;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+.edit {
+  background: #4caf50;
+  color: white;
+}
+
+.delete {
+  background: #f44336;
+  color: white;
+}
+
+.totals {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  font-size: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
