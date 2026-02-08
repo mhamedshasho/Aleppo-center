@@ -1,67 +1,66 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>دفتر الحسابات</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>كشف حساب</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<div class="container">
 
-    <!-- ======= إضافة حساب ======= -->
-    <header class="top">
-        <h1>دفتر الحسابات</h1>
-        <div class="add-account">
-            <input type="text" id="accountName" placeholder="اسم الحساب">
-            <button onclick="addAccount()">➕ إضافة حساب</button>
-        </div>
-        <input type="text" id="searchAccount" placeholder="🔍 بحث عن حساب" oninput="searchAccounts()">
-    </header>
+    <!-- HEADER -->
+    <div class="header">
+        <h2>كشف حساب</h2>
+        <h3 id="accountName">اسم الحساب</h3>
+        <p>مركز حلب – حلب منطقة الكلاسة – المنطقة الصناعية</p>
+    </div>
 
-    <!-- ======= عرض الحسابات ======= -->
-    <section id="accountsView" class="accounts-grid">
-        <!-- الحسابات تظهر هنا كبطاقات -->
-    </section>
+    <!-- ADD PAYMENT -->
+    <div class="add-box">
+        <input type="date" id="date">
+        <input type="text" id="details" placeholder="التفاصيل">
+        <input type="number" id="amount" placeholder="المبلغ">
 
-    <!-- ======= تفاصيل الحساب ======= -->
-    <section id="accountDetail" class="account-detail" style="display:none;">
+        <select id="currency">
+            <option value="syp">سوري</option>
+            <option value="usd">دولار</option>
+        </select>
 
-        <div class="account-header">
-            <button class="back" onclick="backToAccounts()">⬅ رجوع</button>
-            <h2 id="accountTitle"></h2>
-            <button class="delete-account" onclick="deleteCurrentAccount()">🗑 حذف الحساب</button>
-        </div>
+        <select id="type">
+            <option value="credit">له</option>
+            <option value="debit">عليه</option>
+        </select>
 
-        <!-- ======= إضافة دفعة ======= -->
-        <div class="add-payment">
-            <input type="number" id="paymentAmount" placeholder="المبلغ">
-            
-            <select id="paymentCurrency">
-                <option value="USD">دولار $</option>
-                <option value="SYP">ليرة سورية</option>
-            </select>
+        <button onclick="addPayment()">إضافة دفعة</button>
+    </div>
 
-            <input type="text" id="paymentType" placeholder="اسم / نوع الدفعة">
-            
-            <button onclick="addPayment()">➕ إضافة دفعة</button>
-        </div>
+    <!-- TABLE -->
+    <table>
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>التفاصيل</th>
+                <th>عليه</th>
+                <th>له</th>
+                <th>الرصيد</th>
+                <th>حذف</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
 
-        <!-- ======= بحث داخل الدفعات ======= -->
-        <input 
-            type="text" 
-            id="searchPayment" 
-            placeholder="🔍 بحث عن دفعة (اسم أو مبلغ)" 
-            oninput="renderCurrentAccount()"
-        >
-
-        <!-- ======= جدول الدفعات ======= -->
-        <div id="info" class="table-container">
-            <!-- الجدول يظهر هنا -->
-        </div>
-
-    </section>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="2">إجمالي العمليات</td>
+                <td id="totalDebit">0</td>
+                <td id="totalCredit">0</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="balance-row">
+                <td colspan="6" id="finalBalance">الرصيد الإجمالي: 0</td>
+            </tr>
+        </tfoot>
+    </table>
 
 </div>
 
