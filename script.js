@@ -1,11 +1,13 @@
 let accounts = JSON.parse(localStorage.getItem('accounts') || "[]");
 let currentIndex = null;
 
+// حفظ الحسابات
 function saveAccounts() {
     localStorage.setItem('accounts', JSON.stringify(accounts));
     renderAccounts();
 }
 
+// إضافة حساب جديد
 function addAccount() {
     let name = document.getElementById('accountName').value.trim();
     if (!name) return alert('ادخل اسم الحساب');
@@ -16,6 +18,7 @@ function addAccount() {
     document.getElementById('accountName').value = '';
 }
 
+// عرض كل الحسابات كبطاقات
 function renderAccounts() {
     let container = document.getElementById('accountsView');
     container.innerHTML = '';
@@ -23,11 +26,12 @@ function renderAccounts() {
         let card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `<h3>${acc.name}</h3><small>${acc.payments.length} دفعة</small>`;
-        card.onclick = () => openAccount(index);
+        card.onclick = () => openAccount(index); // عند الضغط على الحساب
         container.appendChild(card);
     });
 }
 
+// بحث عن حساب
 function searchAccounts() {
     let query = document.getElementById('searchAccount').value.toLowerCase();
     let filtered = accounts.filter(a => a.name.toLowerCase().includes(query));
@@ -42,6 +46,7 @@ function searchAccounts() {
     });
 }
 
+// فتح الحساب المختار
 function openAccount(index) {
     currentIndex = index;
     document.getElementById('accountsView').style.display = 'none';
@@ -50,12 +55,14 @@ function openAccount(index) {
     renderCurrentAccount();
 }
 
+// العودة إلى جميع الحسابات
 function backToAccounts() {
     document.getElementById('accountDetail').style.display = 'none';
     document.getElementById('accountsView').style.display = 'grid';
     currentIndex = null;
 }
 
+// إضافة دفعة جديدة
 function addPayment() {
     let amount = parseFloat(document.getElementById('paymentAmount').value);
     if (isNaN(amount) || amount <= 0) return alert('ادخل مبلغ صحيح');
@@ -69,6 +76,7 @@ function addPayment() {
     renderCurrentAccount();
 }
 
+// حذف دفعة
 function deletePayment(paymentIndex) {
     if (!confirm('هل تريد حذف هذه الدفعة؟')) return;
     accounts[currentIndex].payments.splice(paymentIndex, 1);
@@ -76,6 +84,7 @@ function deletePayment(paymentIndex) {
     renderCurrentAccount();
 }
 
+// تعديل دفعة
 function editPayment(paymentIndex) {
     let p = accounts[currentIndex].payments[paymentIndex];
     let newAmount = parseFloat(prompt('المبلغ الجديد:', p.amount));
@@ -89,6 +98,7 @@ function editPayment(paymentIndex) {
     renderCurrentAccount();
 }
 
+// حذف الحساب بالكامل
 function deleteCurrentAccount() {
     if (!confirm('هل تريد حذف الحساب بالكامل؟')) return;
     accounts.splice(currentIndex, 1);
@@ -96,6 +106,7 @@ function deleteCurrentAccount() {
     backToAccounts();
 }
 
+// عرض الدفعات في جدول مع المجموع الكلي لكل عملة
 function renderCurrentAccount() {
     let acc = accounts[currentIndex];
     let filter = document.getElementById('searchPayment').value.toLowerCase();
