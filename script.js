@@ -1,167 +1,79 @@
-let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
-let currentAccountId = null;
-let editPaymentIndex = null;
+let payments = JSON.parse(localStorage.getItem("payments")) || [];
+let editIndex = null;
 
-function save() {
-  localStorage.setItem("accounts", JSON.stringify(accounts));
-}
+const tableBody = document.getElementById("tableBody");
+const totalCredit = document.getElementById("totalCredit");
+const totalDebit = document.getElementById("totalDebit");
+const balance = document.getElementById("balance");
 
-function addAccount() {
-  if (!newAccountName.value.trim()) return;
-  accounts.push({
-    id: Date.now(),
-    name: newAccountName.value.trim(),
-    payments: []
-  });
-  newAccountName.value = "";
-  save();
-  renderAccounts();
-}
+const dateInput = document.getElementById("date");
+const detailsInput = document.getElementById("details");
+const debitInput = document.getElementById("debit");
+const creditInput = document.getElementById("credit");
 
-function renderAccounts() {
-  accountsList.innerHTML = "";
-  accounts.forEach(a => {
-    accountsList.innerHTML += `
-      <li>
-        <span onclick="openAccount(${a.id})">${a.name}</span>
-        <div>
-          <button onclick="renameAccount(${a.id})">✏️</button>
-          <button onclick="deleteAccount(${a.id})">🗑</button>
-        </div>
-      </li>
-    `;
-  });
-}
+function save() { localStorage.setItem("payments", JSON.stringify(payments)); }
 
-function openAccount(id) {
-  currentAccountId = id;
-  accountsView.style.display = "none";
-  accountView.style.display = "block";
-  accountTitle.textContent = accounts.find(a => a.id === id).name;
-  resetForm();
-  renderPayments();
-}
+function addPayment() {
+  if(!dateInput.value || (!debitInput.value && !creditInput.value)) return;
 
-function backToAccounts() {
-  accountsView.style.display = "block";
-  accountView.style.display = "none";
-}
-
-function renameAccount(id) {
-  const acc = accounts.find(a => a.id === id);
-  const name = prompt("اسم جديد", acc.name);
-  if (!name) return;
-  acc.name = name;
-  save();
-  renderAccounts();
-}
-
-function deleteAccount(id) {
-  if (!confirm("حذف الحساب؟")) return;
-  accounts = accounts.filter(a => a.id !== id);
-  save();
-  renderAccounts();
-}
-
-function handleDateMode() {
-  date.style.display = dateMode.value === "manual" ? "block" : "none";
-}
-
-function savePayment() {
-  const acc = accounts.find(a => a.id === currentAccountId);
-  if (!amount.value) return;
-
-  const paymentDate =
-    dateMode.value === "auto"
-      ? new Date().toISOString().split("T")[0]
-      : date.value;
-
-  const payment = {
-    amount: +amount.value,
-    currency: currency.value,
-    type: type.value,
-    direction: direction.value,
-    date: paymentDate
+  const obj = {
+    date: dateInput.value,
+    details: detailsInput.value,
+    debit: +debitInput.value || 0,
+    credit: +creditInput.value || 0
   };
 
-  if (editPaymentIndex !== null) {
-    acc.payments[editPaymentIndex] = payment;
-    editPaymentIndex = null;
-  } else {
-    acc.payments.push(payment);
-  }
+  if(editIndex !== null) { payments[editIndex] = obj; editIndex=null; }
+  else payments.push(obj);
 
-  save();
-  resetForm();
-  renderPayments();
+  save(); clearForm(); render();
 }
 
-function renderPayments() {
-  const acc = accounts.find(a => a.id === currentAccountId);
-  const search = searchPayment.value.toLowerCase();
+function clearForm() { dateInput.value=""; detailsInput.value=""; debitInput.value=""; creditInput.value=""; }
 
+function render() {
   tableBody.innerHTML = "";
-  let totalUSD = 0, totalSYP = 0, count = 0;
+  let totalD=0, totalC=0, bal=0;
 
-  acc.payments.forEach((p, i) => {
-    if (search && !(`${p.amount}${p.currency}${p.type}`.toLowerCase().includes(search))) return;
-
+  payments.forEach((p,i)=>{
+    bal += p.credit - p.debit;
     tableBody.innerHTML += `
       <tr>
-        <td>${p.amount}</td>
-        <td>${p.currency}</td>
-        <td>${p.direction === "in" ? "له" : "عليه"}</td>
         <td>${p.date}</td>
+        <td>${p.details}</td>
+        <td>${p.debit}</td>
+        <td>${p.credit}</td>
+        <td>${bal}</td>
         <td>
-          <button onclick="editPayment(${i})">✏️</button>
-          <button onclick="removePayment(${i})">🗑</button>
+          <button onclick="editPayment(${i})">تعديل</button>
+          <button onclick="removePayment(${i})">حذف</button>
         </td>
       </tr>
     `;
-
-    if (p.currency === "USD") totalUSD += p.amount;
-    if (p.currency === "SYP") totalSYP += p.amount;
-    count++;
+    totalD += p.debit; totalC += p.credit;
   });
 
-  totalUSDSpan.textContent = totalUSD;
-  totalSYPSpan.textContent = totalSYP;
-  totalCountSpan.textContent = count;
+  totalDebit.textContent = totalD;
+  totalCredit.textContent = totalC;
+  balance.textContent = bal;
 }
 
 function editPayment(i) {
-  const acc = accounts.find(a => a.id === currentAccountId);
-  const p = acc.payments[i];
-
-  amount.value = p.amount;
-  currency.value = p.currency;
-  type.value = p.type;
-  direction.value = p.direction;
-  dateMode.value = "manual";
-  handleDateMode();
-  date.value = p.date;
-
-  editPaymentIndex = i;
+  const p = payments[i];
+  dateInput.value = p.date;
+  detailsInput.value = p.details;
+  debitInput.value = p.debit;
+  creditInput.value = p.credit;
+  editIndex = i;
 }
 
 function removePayment(i) {
-  if (!confirm("حذف الدفعة؟")) return;
-  const acc = accounts.find(a => a.id === currentAccountId);
-  acc.payments.splice(i, 1);
+  if(!confirm("حذف الدفعة؟")) return;
+  payments.splice(i,1);
   save();
-  renderPayments();
+  render();
 }
 
-function resetForm() {
-  amount.value = "";
-  type.value = "";
-  date.value = "";
-  dateMode.value = "auto";
-  handleDateMode();
-}
+function toggleDark() { document.documentElement.classList.toggle("dark"); }
 
-function toggleDark() {
-  document.documentElement.classList.toggle("dark");
-}
-
-renderAccounts();
+render();
