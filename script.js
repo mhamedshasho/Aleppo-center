@@ -1,6 +1,8 @@
+// استرجاع البيانات من LocalStorage
 let payments = JSON.parse(localStorage.getItem("payments")) || [];
 let editIndex = null;
 
+// عناصر DOM
 const tableBody = document.getElementById("tableBody");
 const totalCredit = document.getElementById("totalCredit");
 const totalDebit = document.getElementById("totalDebit");
@@ -11,31 +13,53 @@ const detailsInput = document.getElementById("details");
 const debitInput = document.getElementById("debit");
 const creditInput = document.getElementById("credit");
 
-function save() { localStorage.setItem("payments", JSON.stringify(payments)); }
-
-function addPayment() {
-  if(!dateInput.value || (!debitInput.value && !creditInput.value)) return;
-
-  const obj = {
-    date: dateInput.value,
-    details: detailsInput.value,
-    debit: +debitInput.value || 0,
-    credit: +creditInput.value || 0
-  };
-
-  if(editIndex !== null) { payments[editIndex] = obj; editIndex=null; }
-  else payments.push(obj);
-
-  save(); clearForm(); render();
+// حفظ البيانات في LocalStorage
+function save() {
+  localStorage.setItem("payments", JSON.stringify(payments));
 }
 
-function clearForm() { dateInput.value=""; detailsInput.value=""; debitInput.value=""; creditInput.value=""; }
+// إضافة دفعة جديدة أو تعديل موجودة
+function addPayment() {
+  // تحقق من وجود تاريخ ودفعة واحدة على الأقل
+  if (!dateInput.value || (!debitInput.value && !creditInput.value)) {
+    alert("أدخل التاريخ والدفعة");
+    return;
+  }
 
-function render() {
+  const payment = {
+    date: dateInput.value,
+    details: detailsInput.value || "",
+    debit: Number(debitInput.value) || 0,
+    credit: Number(creditInput.value) || 0
+  };
+
+  if (editIndex !== null) {
+    payments[editIndex] = payment;
+    editIndex = null;
+  } else {
+    payments.push(payment);
+  }
+
+  save();
+  clearForm();
+  renderPayments();
+}
+
+// مسح الفورم
+function clearForm() {
+  dateInput.value = "";
+  detailsInput.value = "";
+  debitInput.value = "";
+  creditInput.value = "";
+  document.getElementById("saveBtn").textContent = "حفظ الدفعة";
+}
+
+// عرض جميع الدفعات في الجدول وحساب الرصيد
+function renderPayments() {
   tableBody.innerHTML = "";
-  let totalD=0, totalC=0, bal=0;
+  let totalD = 0, totalC = 0, bal = 0;
 
-  payments.forEach((p,i)=>{
+  payments.forEach((p, i) => {
     bal += p.credit - p.debit;
     tableBody.innerHTML += `
       <tr>
@@ -50,7 +74,8 @@ function render() {
         </td>
       </tr>
     `;
-    totalD += p.debit; totalC += p.credit;
+    totalD += p.debit;
+    totalC += p.credit;
   });
 
   totalDebit.textContent = totalD;
@@ -58,6 +83,7 @@ function render() {
   balance.textContent = bal;
 }
 
+// تعديل دفعة
 function editPayment(i) {
   const p = payments[i];
   dateInput.value = p.date;
@@ -65,15 +91,21 @@ function editPayment(i) {
   debitInput.value = p.debit;
   creditInput.value = p.credit;
   editIndex = i;
+  document.getElementById("saveBtn").textContent = "تحديث الدفعة";
 }
 
+// حذف دفعة
 function removePayment(i) {
-  if(!confirm("حذف الدفعة؟")) return;
-  payments.splice(i,1);
+  if (!confirm("هل تريد حذف هذه الدفعة؟")) return;
+  payments.splice(i, 1);
   save();
-  render();
+  renderPayments();
 }
 
-function toggleDark() { document.documentElement.classList.toggle("dark"); }
+// تبديل الوضع الليلي
+function toggleDark() {
+  document.documentElement.classList.toggle("dark");
+}
 
-render();
+// عرض البيانات عند تحميل الصفحة
+renderPayments();
