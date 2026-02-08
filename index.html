@@ -13,9 +13,10 @@
     <img src="logo.png" class="logo">
     <span>دفتر الحسابات</span>
   </div>
-  <button class="icon-btn" onclick="toggleDark()">🌙</button>
+  <button class="icon-btn" onclick="toggleDark()">الوضع الليلي</button>
 </header>
 
+<!-- شاشة الحسابات -->
 <section id="accountsView">
   <div class="card">
     <h2>الحسابات</h2>
@@ -24,25 +25,32 @@
       <button class="primary" onclick="addAccount()">إضافة</button>
     </div>
   </div>
+
   <ul id="accountsList" class="list"></ul>
 </section>
 
+<!-- شاشة حساب واحد -->
 <section id="accountView" style="display:none">
-  <button class="back" onclick="backToAccounts()">⬅ الرجوع للحسابات</button>
+
+  <button class="back" onclick="backToAccounts()">الرجوع للحسابات</button>
   <h2 id="accountTitle" class="center"></h2>
 
+  <!-- البحث والمجاميع -->
   <div class="card summary">
     <input id="searchPayment" type="text" placeholder="بحث بالدفع أو السبب..." oninput="renderPayments()">
     <div class="totals">
-      <div>💵 USD: <span id="totalUSD">0</span></div>
-      <div>🇸🇾 SYP: <span id="totalSYP">0</span></div>
-      <div>📝 تعداد: <span id="totalCount">0</span></div>
+      <div>مجموع الدولار: <span id="totalUSD">0</span></div>
+      <div>مجموع السوري: <span id="totalSYP">0</span></div>
+      <div>عدد الدفعات: <span id="totalCount">0</span></div>
     </div>
   </div>
 
+  <!-- فورم الدفعة -->
   <div class="card accent">
     <h3 id="formTitle">إضافة دفعة</h3>
+
     <input id="amount" type="number" placeholder="المبلغ">
+
     <div class="row">
       <select id="currency">
         <option value="USD">دولار</option>
@@ -53,15 +61,20 @@
         <option value="out">عليه</option>
       </select>
     </div>
+
     <input id="type" placeholder="السبب">
+
     <select id="dateMode" onchange="handleDateMode()">
-      <option value="auto">📅 اليوم</option>
-      <option value="manual">✍️ يدوي</option>
+      <option value="auto">تاريخ اليوم</option>
+      <option value="manual">تاريخ يدوي</option>
     </select>
+
     <input id="date" type="date" style="display:none">
+
     <button id="saveBtn" class="primary" onclick="savePayment()">حفظ</button>
   </div>
 
+  <!-- جدول الدفعات -->
   <div class="card">
     <table>
       <thead>
@@ -70,7 +83,7 @@
           <th>العملة</th>
           <th>له/عليه</th>
           <th>التاريخ</th>
-          <th></th>
+          <th>إجراءات</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
