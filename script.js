@@ -1,21 +1,18 @@
 let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 let currentAccountId = null;
+let editPaymentIndex = null;
 
-/* حفظ */
 function save() {
   localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-/* حسابات */
 function addAccount() {
   if (!newAccountName.value.trim()) return;
-
   accounts.push({
     id: Date.now(),
     name: newAccountName.value.trim(),
     payments: []
   });
-
   newAccountName.value = "";
   save();
   renderAccounts();
@@ -41,6 +38,7 @@ function openAccount(id) {
   accountsView.style.display = "none";
   accountView.style.display = "block";
   accountTitle.textContent = accounts.find(a => a.id === id).name;
+  resetForm();
   renderPayments();
 }
 
@@ -65,62 +63,103 @@ function deleteAccount(id) {
   renderAccounts();
 }
 
-/* التاريخ */
 function handleDateMode() {
   date.style.display = dateMode.value === "manual" ? "block" : "none";
 }
 
-/* دفعات */
-function addPayment() {
+function savePayment() {
   const acc = accounts.find(a => a.id === currentAccountId);
   if (!amount.value) return;
 
-  let paymentDate =
+  const paymentDate =
     dateMode.value === "auto"
       ? new Date().toISOString().split("T")[0]
       : date.value;
 
-  acc.payments.push({
+  const payment = {
     amount: +amount.value,
     currency: currency.value,
     type: type.value,
     direction: direction.value,
     date: paymentDate
-  });
+  };
+
+  if (editPaymentIndex !== null) {
+    acc.payments[editPaymentIndex] = payment;
+    editPaymentIndex = null;
+  } else {
+    acc.payments.push(payment);
+  }
 
   save();
+  resetForm();
   renderPayments();
-
-  amount.value = "";
-  type.value = "";
-  date.value = "";
 }
 
 function renderPayments() {
   const acc = accounts.find(a => a.id === currentAccountId);
+  const search = searchPayment.value.toLowerCase();
+
   tableBody.innerHTML = "";
+  let totalUSD = 0, totalSYP = 0, count = 0;
 
   acc.payments.forEach((p, i) => {
+    if (search && !(`${p.amount}${p.currency}${p.type}`.toLowerCase().includes(search))) return;
+
     tableBody.innerHTML += `
       <tr>
         <td>${p.amount}</td>
         <td>${p.currency}</td>
         <td>${p.direction === "in" ? "له" : "عليه"}</td>
         <td>${p.date}</td>
-        <td><button onclick="removePayment(${i})">❌</button></td>
+        <td>
+          <button onclick="editPayment(${i})">✏️</button>
+          <button onclick="removePayment(${i})">🗑</button>
+        </td>
       </tr>
     `;
+
+    if (p.currency === "USD") totalUSD += p.amount;
+    if (p.currency === "SYP") totalSYP += p.amount;
+    count++;
   });
+
+  totalUSDSpan.textContent = totalUSD;
+  totalSYPSpan.textContent = totalSYP;
+  totalCountSpan.textContent = count;
+}
+
+function editPayment(i) {
+  const acc = accounts.find(a => a.id === currentAccountId);
+  const p = acc.payments[i];
+
+  amount.value = p.amount;
+  currency.value = p.currency;
+  type.value = p.type;
+  direction.value = p.direction;
+  dateMode.value = "manual";
+  handleDateMode();
+  date.value = p.date;
+
+  editPaymentIndex = i;
 }
 
 function removePayment(i) {
+  if (!confirm("حذف الدفعة؟")) return;
   const acc = accounts.find(a => a.id === currentAccountId);
   acc.payments.splice(i, 1);
   save();
   renderPayments();
 }
 
-/* داكن */
+function resetForm() {
+  amount.value = "";
+  type.value = "";
+  date.value = "";
+  dateMode.value = "auto";
+  handleDateMode();
+}
+
 function toggleDark() {
   document.documentElement.classList.toggle("dark");
 }
