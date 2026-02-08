@@ -9,54 +9,57 @@
 <body>
 
 <header class="header">
-  <img src="logo.png" class="logo">
-  <h1>دفتر الحسابات</h1>
-  <button onclick="toggleDark()">🌙</button>
+  <div class="brand">
+    <img src="logo.png" class="logo">
+    <span>دفتر الحسابات</span>
+  </div>
+  <button class="icon-btn" onclick="toggleDark()">🌙</button>
 </header>
 
-<!-- الحسابات -->
-<div id="accountsView" class="card">
-  <h2>📂 الحسابات</h2>
-  <div class="row">
-    <input id="newAccountName" placeholder="اسم الحساب">
-    <button onclick="addAccount()">➕</button>
-  </div>
-  <ul id="accountsList"></ul>
-</div>
-
-<!-- حساب واحد -->
-<div id="accountView" style="display:none">
-
-  <button class="back" onclick="backToAccounts()">⬅ رجوع</button>
-  <h2 id="accountTitle"></h2>
-
+<section id="accountsView">
   <div class="card">
-    <h3>إضافة دفعة</h3>
+    <h2>الحسابات</h2>
+    <div class="row">
+      <input id="newAccountName" placeholder="اسم الحساب">
+      <button class="primary" onclick="addAccount()">إضافة</button>
+    </div>
+  </div>
+  <ul id="accountsList" class="list"></ul>
+</section>
 
+<section id="accountView" style="display:none">
+  <button class="back" onclick="backToAccounts()">⬅ الرجوع للحسابات</button>
+  <h2 id="accountTitle" class="center"></h2>
+
+  <div class="card summary">
+    <input id="searchPayment" type="text" placeholder="بحث بالدفع أو السبب..." oninput="renderPayments()">
+    <div class="totals">
+      <div>💵 USD: <span id="totalUSD">0</span></div>
+      <div>🇸🇾 SYP: <span id="totalSYP">0</span></div>
+      <div>📝 تعداد: <span id="totalCount">0</span></div>
+    </div>
+  </div>
+
+  <div class="card accent">
+    <h3 id="formTitle">إضافة دفعة</h3>
     <input id="amount" type="number" placeholder="المبلغ">
-
-    <select id="currency">
-      <option value="USD">دولار</option>
-      <option value="SYP">سوري</option>
-    </select>
-
+    <div class="row">
+      <select id="currency">
+        <option value="USD">دولار</option>
+        <option value="SYP">سوري</option>
+      </select>
+      <select id="direction">
+        <option value="in">له</option>
+        <option value="out">عليه</option>
+      </select>
+    </div>
     <input id="type" placeholder="السبب">
-
-    <select id="direction">
-      <option value="in">له</option>
-      <option value="out">عليه</option>
-    </select>
-
-    <!-- اختيار نوع التاريخ -->
     <select id="dateMode" onchange="handleDateMode()">
-      <option value="auto">📅 تاريخ تلقائي</option>
-      <option value="manual">✍️ اختيار يدوي</option>
+      <option value="auto">📅 اليوم</option>
+      <option value="manual">✍️ يدوي</option>
     </select>
-
-    <!-- تاريخ يدوي -->
     <input id="date" type="date" style="display:none">
-
-    <button onclick="addPayment()">إضافة</button>
+    <button id="saveBtn" class="primary" onclick="savePayment()">حفظ</button>
   </div>
 
   <div class="card">
@@ -65,7 +68,7 @@
         <tr>
           <th>المبلغ</th>
           <th>العملة</th>
-          <th>له / عليه</th>
+          <th>له/عليه</th>
           <th>التاريخ</th>
           <th></th>
         </tr>
@@ -74,7 +77,7 @@
     </table>
   </div>
 
-</div>
+</section>
 
 <script src="script.js"></script>
 </body>
