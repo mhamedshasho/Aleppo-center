@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Cairo", sans-serif;
+  font-family: Cairo, sans-serif;
 }
 
 body {
@@ -8,104 +8,83 @@ body {
   background: #f4f6f8;
 }
 
-.app {
-  max-width: 1400px;
-  margin: auto;
-  padding: 30px;
+.dark body {
+  background: #111;
+  color: white;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
+.header {
+  background: #ff8c42;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.logo {
+  width: 42px;
 }
 
 .card {
-  background: #fff;
-  padding: 20px;
+  background: white;
+  margin: 12px;
+  padding: 15px;
   border-radius: 14px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-  gap: 15px;
+.dark .card {
+  background: #1e1e1e;
 }
 
-input, select {
-  padding: 14px;
-  font-size: 16px;
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
   border-radius: 10px;
   border: 1px solid #ccc;
 }
 
 button {
-  background: linear-gradient(135deg,#ff8c42,#ff6a00);
+  background: #ff8c42;
   color: white;
   border: none;
-  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  background: #eee;
+  margin-top: 8px;
+  padding: 12px;
   border-radius: 12px;
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-.table-wrapper {
-  background: white;
-  border-radius: 14px;
-  overflow-x: auto;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+.dark ul li {
+  background: #2a2a2a;
 }
 
 table {
   width: 100%;
-  min-width: 900px;
-  border-collapse: collapse;
+  font-size: 14px;
 }
 
 th, td {
-  padding: 18px;
+  padding: 8px;
   text-align: center;
-  font-size: 16px;
 }
 
-thead {
-  background: #ff8c42;
-  color: white;
-}
-
-tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-.action-btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  margin: 2px;
-}
-
-.edit {
-  background: #4caf50;
-  color: white;
-}
-
-.delete {
-  background: #f44336;
-  color: white;
-}
-
-.totals {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-around;
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  font-size: 18px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+.back {
+  margin: 10px;
+  background: #444;
 }
