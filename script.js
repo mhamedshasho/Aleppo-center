@@ -1,61 +1,109 @@
-let payments = [];
-let balance = 0;
+let payments = JSON.parse(localStorage.getItem("payments")) || [];
+let editIndex = null;
+
+function save() {
+  localStorage.setItem("payments", JSON.stringify(payments));
+}
 
 function addPayment() {
-    const date = date.value;
-    const details = document.getElementById("details").value;
-    const amount = Number(document.getElementById("amount").value);
-    const type = document.getElementById("type").value;
-    const currency = document.getElementById("currency").value;
+  const name = nameInput.value;
+  const amount = +amountInput.value;
+  const currency = currencySelect.value;
+  const type = typeInput.value;
+  const date = dateInput.value;
 
-    if (!date || !amount) return alert("أدخل البيانات");
+  if (!name || !amount || !date) return;
 
-    payments.push({ date, details, amount, type, currency });
-    renderTable();
+  const obj = { name, amount, currency, type, date };
+
+  if (editIndex !== null) {
+    payments[editIndex] = obj;
+    editIndex = null;
+  } else {
+    payments.push(obj);
+  }
+
+  save();
+  clearForm();
+  render();
 }
 
-function deletePayment(index) {
-    payments.splice(index, 1);
-    renderTable();
+function clearForm() {
+  nameInput.value = "";
+  amountInput.value = "";
+  typeInput.value = "";
+  dateInput.value = "";
 }
 
-function renderTable() {
-    const body = document.getElementById("tableBody");
-    body.innerHTML = "";
+function render() {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
 
-    let totalDebit = 0;
-    let totalCredit = 0;
-    balance = 0;
+  let totalUSD = 0;
+  let totalSYP = 0;
 
-    payments.forEach((p, i) => {
-        let debit = 0;
-        let credit = 0;
+  const search = document.getElementById("search").value.toLowerCase();
+  const month = filterMonth.value;
+  const year = filterYear.value;
 
-        if (p.type === "debit") {
-            debit = p.amount;
-            balance += p.amount;
-            totalDebit += p.amount;
-        } else {
-            credit = p.amount;
-            balance -= p.amount;
-            totalCredit += p.amount;
-        }
+  payments.forEach((p, i) => {
+    const d = new Date(p.date);
+    if (search && !(`${p.name}${p.amount}`.toLowerCase().includes(search))) return;
+    if (month && d.getMonth()+1 != month) return;
+    if (year && d.getFullYear() != year) return;
 
-        const row = `
-            <tr>
-                <td>${p.date}</td>
-                <td>${p.details}</td>
-                <td>${debit || ""}</td>
-                <td>${credit || ""}</td>
-                <td>${balance}</td>
-                <td><button class="delete-btn" onclick="deletePayment(${i})">✕</button></td>
-            </tr>
-        `;
-        body.innerHTML += row;
-    });
+    if (p.currency === "USD") totalUSD += p.amount;
+    if (p.currency === "SYP") totalSYP += p.amount;
 
-    document.getElementById("totalDebit").innerText = totalDebit;
-    document.getElementById("totalCredit").innerText = totalCredit;
-    document.getElementById("finalBalance").innerText =
-        "الرصيد الإجمالي: " + balance;
+    tbody.innerHTML += `
+      <tr>
+        <td>${p.name}</td>
+        <td>${p.amount}</td>
+        <td>${p.currency}</td>
+        <td>${p.type}</td>
+        <td>${p.date}</td>
+        <td>
+          <button class="action-btn edit" onclick="edit(${i})">تعديل</button>
+          <button class="action-btn delete" onclick="remove(${i})">حذف</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  totalUSDSpan.textContent = totalUSD;
+  totalSYPSPan.textContent = totalSYP;
 }
+
+function edit(i) {
+  const p = payments[i];
+  nameInput.value = p.name;
+  amountInput.value = p.amount;
+  currencySelect.value = p.currency;
+  typeInput.value = p.type;
+  dateInput.value = p.date;
+  editIndex = i;
+}
+
+function remove(i) {
+  if (!confirm("حذف الدفعة؟")) return;
+  payments.splice(i,1);
+  save();
+  render();
+}
+
+/* عناصر */
+const nameInput = document.getElementById("name");
+const amountInput = document.getElementById("amount");
+const currencySelect = document.getElementById("currency");
+const typeInput = document.getElementById("type");
+const dateInput = document.getElementById("date");
+const filterMonth = document.getElementById("filterMonth");
+const filterYear = document.getElementById("filterYear");
+const totalUSDSpan = document.getElementById("totalUSD");
+const totalSYPSPan = document.getElementById("totalSYP");
+
+/* تعبئة الشهور والسنوات */
+for (let m=1;m<=12;m++) filterMonth.innerHTML += `<option value="${m}">${m}</option>`;
+for (let y=2020;y<=2035;y++) filterYear.innerHTML += `<option value="${y}">${y}</option>`;
+
+render();
