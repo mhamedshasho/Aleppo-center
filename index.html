@@ -2,65 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>كشف حساب</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دفتر الدفعات</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+<div class="app">
 
-    <!-- HEADER -->
-    <div class="header">
-        <h2>كشف حساب</h2>
-        <h3 id="accountName">اسم الحساب</h3>
-        <p>مركز حلب – حلب منطقة الكلاسة – المنطقة الصناعية</p>
+  <h1>دفتر الدفعات</h1>
+
+  <!-- إضافة دفعة -->
+  <div class="card">
+    <h2>إضافة دفعة</h2>
+    <div class="form-grid">
+      <input id="name" placeholder="اسم الحساب / الشخص">
+      <input id="amount" type="number" placeholder="المبلغ">
+      <select id="currency">
+        <option value="USD">دولار</option>
+        <option value="SYP">سوري</option>
+      </select>
+      <input id="type" placeholder="نوع الدفعة (إيجار، كهرباء...)">
+      <input id="date" type="date">
+      <button onclick="addPayment()">إضافة</button>
     </div>
+  </div>
 
-    <!-- ADD PAYMENT -->
-    <div class="add-box">
-        <input type="date" id="date">
-        <input type="text" id="details" placeholder="التفاصيل">
-        <input type="number" id="amount" placeholder="المبلغ">
-
-        <select id="currency">
-            <option value="syp">سوري</option>
-            <option value="usd">دولار</option>
-        </select>
-
-        <select id="type">
-            <option value="credit">له</option>
-            <option value="debit">عليه</option>
-        </select>
-
-        <button onclick="addPayment()">إضافة دفعة</button>
+  <!-- البحث و الفلترة -->
+  <div class="card">
+    <h2>بحث و فلترة</h2>
+    <div class="form-grid">
+      <input id="search" placeholder="بحث بالاسم أو المبلغ" oninput="render()">
+      <select id="filterMonth" onchange="render()">
+        <option value="">كل الشهور</option>
+      </select>
+      <select id="filterYear" onchange="render()">
+        <option value="">كل السنوات</option>
+      </select>
     </div>
+  </div>
 
-    <!-- TABLE -->
+  <!-- الجدول -->
+  <div class="table-wrapper">
     <table>
-        <thead>
-            <tr>
-                <th>التاريخ</th>
-                <th>التفاصيل</th>
-                <th>عليه</th>
-                <th>له</th>
-                <th>الرصيد</th>
-                <th>حذف</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-
-        <tfoot>
-            <tr class="total-row">
-                <td colspan="2">إجمالي العمليات</td>
-                <td id="totalDebit">0</td>
-                <td id="totalCredit">0</td>
-                <td colspan="2"></td>
-            </tr>
-            <tr class="balance-row">
-                <td colspan="6" id="finalBalance">الرصيد الإجمالي: 0</td>
-            </tr>
-        </tfoot>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>المبلغ</th>
+          <th>العملة</th>
+          <th>النوع</th>
+          <th>التاريخ</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
     </table>
+  </div>
+
+  <!-- المجاميع -->
+  <div class="totals">
+    <div>💵 مجموع الدولار: <span id="totalUSD">0</span></div>
+    <div>🇸🇾 مجموع السوري: <span id="totalSYP">0</span></div>
+  </div>
 
 </div>
 
