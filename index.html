@@ -3,66 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دفتر الدفعات</title>
+<title>دفتر الحسابات</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<header class="header">
+  <img src="logo.png" class="logo">
+  <h1>دفتر الحسابات</h1>
+  <button onclick="toggleDark()">🌙</button>
+</header>
 
-  <h1>دفتر الدفعات</h1>
+<!-- الحسابات -->
+<div id="accountsView" class="card">
+  <h2>📂 الحسابات</h2>
+  <div class="row">
+    <input id="newAccountName" placeholder="اسم الحساب">
+    <button onclick="addAccount()">➕</button>
+  </div>
+  <ul id="accountsList"></ul>
+</div>
 
-  <!-- إضافة دفعة -->
+<!-- حساب واحد -->
+<div id="accountView" style="display:none">
+
+  <button class="back" onclick="backToAccounts()">⬅ رجوع</button>
+  <h2 id="accountTitle"></h2>
+
   <div class="card">
-    <h2>إضافة دفعة</h2>
-    <div class="form-grid">
-      <input id="name" placeholder="اسم الحساب / الشخص">
-      <input id="amount" type="number" placeholder="المبلغ">
-      <select id="currency">
-        <option value="USD">دولار</option>
-        <option value="SYP">سوري</option>
-      </select>
-      <input id="type" placeholder="نوع الدفعة (إيجار، كهرباء...)">
-      <input id="date" type="date">
-      <button onclick="addPayment()">إضافة</button>
-    </div>
+    <h3>إضافة دفعة</h3>
+
+    <input id="amount" type="number" placeholder="المبلغ">
+
+    <select id="currency">
+      <option value="USD">دولار</option>
+      <option value="SYP">سوري</option>
+    </select>
+
+    <input id="type" placeholder="السبب">
+
+    <select id="direction">
+      <option value="in">له</option>
+      <option value="out">عليه</option>
+    </select>
+
+    <!-- اختيار نوع التاريخ -->
+    <select id="dateMode" onchange="handleDateMode()">
+      <option value="auto">📅 تاريخ تلقائي</option>
+      <option value="manual">✍️ اختيار يدوي</option>
+    </select>
+
+    <!-- تاريخ يدوي -->
+    <input id="date" type="date" style="display:none">
+
+    <button onclick="addPayment()">إضافة</button>
   </div>
 
-  <!-- البحث و الفلترة -->
   <div class="card">
-    <h2>بحث و فلترة</h2>
-    <div class="form-grid">
-      <input id="search" placeholder="بحث بالاسم أو المبلغ" oninput="render()">
-      <select id="filterMonth" onchange="render()">
-        <option value="">كل الشهور</option>
-      </select>
-      <select id="filterYear" onchange="render()">
-        <option value="">كل السنوات</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- الجدول -->
-  <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>الاسم</th>
           <th>المبلغ</th>
           <th>العملة</th>
-          <th>النوع</th>
+          <th>له / عليه</th>
           <th>التاريخ</th>
-          <th>إجراءات</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
-  </div>
-
-  <!-- المجاميع -->
-  <div class="totals">
-    <div>💵 مجموع الدولار: <span id="totalUSD">0</span></div>
-    <div>🇸🇾 مجموع السوري: <span id="totalSYP">0</span></div>
   </div>
 
 </div>
