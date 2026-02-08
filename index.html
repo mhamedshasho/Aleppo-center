@@ -16,73 +16,30 @@
   <button class="icon-btn" onclick="toggleDark()">الوضع الليلي</button>
 </header>
 
-<!-- شاشة الحسابات -->
-<section id="accountsView">
+<div class="app">
+
+  <!-- إضافة دفعة -->
   <div class="card">
-    <h2>الحسابات</h2>
-    <div class="row">
-      <input id="newAccountName" placeholder="اسم الحساب">
-      <button class="primary" onclick="addAccount()">إضافة</button>
+    <h2>إضافة دفعة</h2>
+    <div class="form-grid">
+      <input id="date" type="date" placeholder="التاريخ">
+      <input id="details" placeholder="التفاصيل">
+      <input id="debit" type="number" placeholder="عليه">
+      <input id="credit" type="number" placeholder="له">
+      <button onclick="addPayment()">حفظ الدفعة</button>
     </div>
   </div>
 
-  <ul id="accountsList" class="list"></ul>
-</section>
-
-<!-- شاشة حساب واحد -->
-<section id="accountView" style="display:none">
-
-  <button class="back" onclick="backToAccounts()">الرجوع للحسابات</button>
-  <h2 id="accountTitle" class="center"></h2>
-
-  <!-- البحث والمجاميع -->
-  <div class="card summary">
-    <input id="searchPayment" type="text" placeholder="بحث بالدفع أو السبب..." oninput="renderPayments()">
-    <div class="totals">
-      <div>مجموع الدولار: <span id="totalUSD">0</span></div>
-      <div>مجموع السوري: <span id="totalSYP">0</span></div>
-      <div>عدد الدفعات: <span id="totalCount">0</span></div>
-    </div>
-  </div>
-
-  <!-- فورم الدفعة -->
-  <div class="card accent">
-    <h3 id="formTitle">إضافة دفعة</h3>
-
-    <input id="amount" type="number" placeholder="المبلغ">
-
-    <div class="row">
-      <select id="currency">
-        <option value="USD">دولار</option>
-        <option value="SYP">سوري</option>
-      </select>
-      <select id="direction">
-        <option value="in">له</option>
-        <option value="out">عليه</option>
-      </select>
-    </div>
-
-    <input id="type" placeholder="السبب">
-
-    <select id="dateMode" onchange="handleDateMode()">
-      <option value="auto">تاريخ اليوم</option>
-      <option value="manual">تاريخ يدوي</option>
-    </select>
-
-    <input id="date" type="date" style="display:none">
-
-    <button id="saveBtn" class="primary" onclick="savePayment()">حفظ</button>
-  </div>
-
-  <!-- جدول الدفعات -->
-  <div class="card">
+  <!-- الجدول -->
+  <div class="card table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>المبلغ</th>
-          <th>العملة</th>
-          <th>له/عليه</th>
           <th>التاريخ</th>
+          <th>التفاصيل</th>
+          <th>عليه</th>
+          <th>له</th>
+          <th>الرصيد</th>
           <th>إجراءات</th>
         </tr>
       </thead>
@@ -90,7 +47,14 @@
     </table>
   </div>
 
-</section>
+  <!-- المجاميع -->
+  <div class="card totals">
+    <div>مجموع له: <span id="totalCredit">0</span></div>
+    <div>مجموع عليه: <span id="totalDebit">0</span></div>
+    <div>الرصيد النهائي: <span id="balance">0</span></div>
+  </div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
