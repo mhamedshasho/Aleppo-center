@@ -1,179 +1,84 @@
-/* ======= إعدادات عامة ======= */
-* {
-    box-sizing: border-box;
-    font-family: "Cairo", Tahoma, Arial, sans-serif;
-}
-
 body {
+    background: #f2f2f2;
+    font-family: Tahoma;
     margin: 0;
-    background: #f4f6f8;
-    color: #222;
+    padding: 20px;
 }
 
-.app {
+.container {
     max-width: 1400px;
     margin: auto;
+    background: white;
     padding: 25px;
-}
-
-/* ======= عناوين ======= */
-h1, h2 {
-    margin: 0 0 15px;
-}
-
-/* ======= Inputs ======= */
-input, select {
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 15px;
-    outline: none;
-    background: #fff;
-}
-
-input:focus, select:focus {
-    border-color: #ff8c42;
-    box-shadow: 0 0 0 2px rgba(255,140,66,0.2);
-}
-
-/* ======= الأزرار (الأساس) ======= */
-button {
-    padding: 12px 18px;
     border-radius: 12px;
-    border: none;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    font-weight: 600;
-    white-space: nowrap;
 }
 
-/* ======= زر إضافة (برتقالي) ======= */
-button,
-.add-account button,
-.add-payment button {
-    background: linear-gradient(135deg, #ff8c42, #ff6a00);
-    color: #fff;
-    box-shadow: 0 6px 16px rgba(255, 106, 0, 0.35);
+.header {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(255, 106, 0, 0.45);
+.header h2 {
+    color: #1d4ed8;
+    margin-bottom: 5px;
 }
 
-button:active {
-    transform: scale(0.97);
+.header h3 {
+    margin: 5px 0;
 }
 
-/* ======= زر الرجوع ======= */
-.back {
-    background: #e9ecef;
-    color: #333;
-    box-shadow: none;
-}
-
-.back:hover {
-    background: #dfe3e6;
-}
-
-/* ======= زر حذف الحساب ======= */
-.delete-account {
-    background: linear-gradient(135deg, #ff4d4d, #e60000);
-    color: #fff;
-    box-shadow: 0 6px 14px rgba(230, 0, 0, 0.35);
-}
-
-.delete-account:hover {
-    box-shadow: 0 10px 22px rgba(230, 0, 0, 0.5);
-}
-
-/* ======= شبكة الحسابات ======= */
-.accounts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 18px;
-}
-
-.account-card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.account-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 35px rgba(0,0,0,0.12);
-}
-
-/* ======= إضافة دفعة ======= */
-.add-payment {
+.add-box {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-/* ======= الجدول ======= */
-.table-container {
-    overflow-x: auto;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+.add-box input,
+.add-box select,
+.add-box button {
+    padding: 10px;
+    font-size: 15px;
+}
+
+.add-box button {
+    background: #16a34a;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
 }
 
 th {
-    background: #ff8c42;
-    color: #fff;
-    padding: 14px;
-    font-size: 14px;
+    background: #d1d5db;
+    padding: 12px;
 }
 
 td {
-    padding: 14px;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
     text-align: center;
 }
 
-tr:hover {
-    background: #fafafa;
+.total-row td {
+    background: #e5e7eb;
+    font-weight: bold;
 }
 
-/* ======= أزرار الجدول ======= */
-.table-actions button {
-    padding: 8px 12px;
-    font-size: 13px;
-    border-radius: 8px;
+.balance-row td {
+    background: #fca5a5;
+    font-weight: bold;
+    font-size: 18px;
 }
 
-/* ======= زر تعديل ======= */
-.edit-btn {
-    background: linear-gradient(135deg, #4facfe, #007bff);
-    color: #fff;
-}
-
-/* ======= زر حذف ======= */
 .delete-btn {
-    background: linear-gradient(135deg, #ff6b6b, #d60000);
-    color: #fff;
-}
-
-/* ======= استجابة الهاتف ======= */
-@media (max-width: 768px) {
-    .add-payment {
-        flex-direction: column;
-    }
-
-    table {
-        min-width: 700px;
-    }
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
 }
