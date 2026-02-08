@@ -1,67 +1,110 @@
-// استرجاع البيانات من LocalStorage
-let payments = JSON.parse(localStorage.getItem("payments")) || [];
-let editIndex = null;
+let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+let selectedAccountIndex = null;
+let editAccountIndex = null;
+let payments = JSON.parse(localStorage.getItem("payments")) || {};
 
-// عناصر DOM
-const tableBody = document.getElementById("tableBody");
-const totalCredit = document.getElementById("totalCredit");
-const totalDebit = document.getElementById("totalDebit");
-const balance = document.getElementById("balance");
+const accountsView = document.getElementById("accountsView");
+const accountsList = document.getElementById("accountsList");
+const newAccountName = document.getElementById("newAccountName");
+
+const accountView = document.getElementById("accountView");
+const accountTitle = document.getElementById("accountTitle");
 
 const dateInput = document.getElementById("date");
 const detailsInput = document.getElementById("details");
 const debitInput = document.getElementById("debit");
 const creditInput = document.getElementById("credit");
 
-// حفظ البيانات في LocalStorage
-function save() {
-  localStorage.setItem("payments", JSON.stringify(payments));
+const tableBody = document.getElementById("tableBody");
+const totalCredit = document.getElementById("totalCredit");
+const totalDebit = document.getElementById("totalDebit");
+const balance = document.getElementById("balance");
+
+function saveAccounts(){localStorage.setItem("accounts",JSON.stringify(accounts))}
+function savePayments(){localStorage.setItem("payments",JSON.stringify(payments))}
+
+function addAccount(){
+  const name=newAccountName.value.trim();
+  if(!name) return alert("أدخل اسم الحساب");
+  if(editAccountIndex!==null){accounts[editAccountIndex]=name;editAccountIndex=null}
+  else accounts.push(name);
+  saveAccounts();
+  newAccountName.value="";
+  renderAccounts();
 }
 
-// إضافة دفعة جديدة أو تعديل موجودة
-function addPayment() {
-  // تحقق من وجود تاريخ ودفعة واحدة على الأقل
-  if (!dateInput.value || (!debitInput.value && !creditInput.value)) {
-    alert("أدخل التاريخ والدفعة");
-    return;
-  }
+function renderAccounts(){
+  accountsList.innerHTML="";
+  accounts.forEach((name,i)=>{
+    accountsList.innerHTML+=`
+      <li>
+        <span>${name}</span>
+        <div>
+          <button onclick="selectAccount(${i})">فتح</button>
+          <button onclick="editAccount(${i})">تعديل</button>
+          <button onclick="removeAccount(${i})">حذف</button>
+        </div>
+      </li>
+    `;
+  });
+}
 
-  const payment = {
-    date: dateInput.value,
-    details: detailsInput.value || "",
-    debit: Number(debitInput.value) || 0,
-    credit: Number(creditInput.value) || 0
-  };
+function selectAccount(i){
+  selectedAccountIndex=i;
+  accountsView.style.display="none";
+  accountView.style.display="block";
+  accountTitle.textContent=accounts[i];
+  if(!payments[accounts[i]]) payments[accounts[i]]=[];
+  renderPayments();
+}
 
-  if (editIndex !== null) {
-    payments[editIndex] = payment;
-    editIndex = null;
-  } else {
-    payments.push(payment);
-  }
+function editAccount(i){newAccountName.value=accounts[i];editAccountIndex=i}
+function removeAccount(i){
+  if(!confirm("هل تريد حذف هذا الحساب وجميع دفعاته؟")) return;
+  const accName=accounts[i];
+  accounts.splice(i,1);
+  delete payments[accName];
+  saveAccounts();
+  savePayments();
+  renderAccounts();
+}
 
-  save();
+function backToAccounts(){
+  selectedAccountIndex=null;
+  accountView.style.display="none";
+  accountsView.style.display="block";
+}
+
+let editPaymentIndex=null;
+
+function addPayment(){
+  if(selectedAccountIndex===null) return alert("اختر حساب أولاً");
+  if(!dateInput.value||(!debitInput.value&&!creditInput.value)) return alert("أدخل التاريخ والدفعة");
+  const payment={date:dateInput.value,details:detailsInput.value||"",debit:Number(debitInput.value)||0,credit:Number(creditInput.value)||0};
+  const accName=accounts[selectedAccountIndex];
+  if(editPaymentIndex!==null){payments[accName][editPaymentIndex]=payment;editPaymentIndex=null}
+  else payments[accName].push(payment);
+  savePayments();
   clearForm();
   renderPayments();
 }
 
-// مسح الفورم
-function clearForm() {
-  dateInput.value = "";
-  detailsInput.value = "";
-  debitInput.value = "";
-  creditInput.value = "";
-  document.getElementById("saveBtn").textContent = "حفظ الدفعة";
+function clearForm(){
+  dateInput.value="";
+  detailsInput.value="";
+  debitInput.value="";
+  creditInput.value="";
+  document.getElementById("saveBtn").textContent="حفظ الدفعة";
 }
 
-// عرض جميع الدفعات في الجدول وحساب الرصيد
-function renderPayments() {
-  tableBody.innerHTML = "";
-  let totalD = 0, totalC = 0, bal = 0;
-
-  payments.forEach((p, i) => {
-    bal += p.credit - p.debit;
-    tableBody.innerHTML += `
+function renderPayments(){
+  const accName=accounts[selectedAccountIndex];
+  const accPayments=payments[accName]||[];
+  tableBody.innerHTML="";
+  let totalD=0,totalC=0,bal=0;
+  accPayments.forEach((p,i)=>{
+    bal+=p.credit-p.debit;
+    tableBody.innerHTML+=`
       <tr>
         <td>${p.date}</td>
         <td>${p.details}</td>
@@ -74,38 +117,33 @@ function renderPayments() {
         </td>
       </tr>
     `;
-    totalD += p.debit;
-    totalC += p.credit;
+    totalD+=p.debit;
+    totalC+=p.credit;
   });
-
-  totalDebit.textContent = totalD;
-  totalCredit.textContent = totalC;
-  balance.textContent = bal;
+  totalDebit.textContent=totalD;
+  totalCredit.textContent=totalC;
+  balance.textContent=bal;
 }
 
-// تعديل دفعة
-function editPayment(i) {
-  const p = payments[i];
-  dateInput.value = p.date;
-  detailsInput.value = p.details;
-  debitInput.value = p.debit;
-  creditInput.value = p.credit;
-  editIndex = i;
-  document.getElementById("saveBtn").textContent = "تحديث الدفعة";
+function editPayment(i){
+  const accName=accounts[selectedAccountIndex];
+  const p=payments[accName][i];
+  dateInput.value=p.date;
+  detailsInput.value=p.details;
+  debitInput.value=p.debit;
+  creditInput.value=p.credit;
+  editPaymentIndex=i;
+  document.getElementById("saveBtn").textContent="تحديث الدفعة";
 }
 
-// حذف دفعة
-function removePayment(i) {
-  if (!confirm("هل تريد حذف هذه الدفعة؟")) return;
-  payments.splice(i, 1);
-  save();
+function removePayment(i){
+  if(!confirm("هل تريد حذف هذه الدفعة؟")) return;
+  const accName=accounts[selectedAccountIndex];
+  payments[accName].splice(i,1);
+  savePayments();
   renderPayments();
 }
 
-// تبديل الوضع الليلي
-function toggleDark() {
-  document.documentElement.classList.toggle("dark");
-}
+function toggleDark(){document.documentElement.classList.toggle("dark")}
 
-// عرض البيانات عند تحميل الصفحة
-renderPayments();
+renderAccounts();
